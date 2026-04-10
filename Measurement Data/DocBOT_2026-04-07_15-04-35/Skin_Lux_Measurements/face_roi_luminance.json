@@ -1,0 +1,1332 @@
+[
+  {
+    "avgAperture" : 1.899999976158142,
+    "avgFrameLuminance" : 117.19719907407408,
+    "avgISO" : 117.17488098144531,
+    "avgSaturationRatio" : 0,
+    "avgShutterSpeed" : 0.018684,
+    "avgWhiteBalanceTemp" : 5120.7001953125,
+    "avgWhiteBalanceTint" : 9.518969535827637,
+    "faceConfidence" : 1,
+    "faceDetected" : true,
+    "frameCount" : 2,
+    "offsetFromVideoStartSeconds" : 3.2438770532608032,
+    "roiLuminances" : [
+      {
+        "meanNormalizedLuminance" : 89.3440664415385,
+        "meanRawLuminance" : 117.19719907407408,
+        "meanSkinPixelCount" : 0,
+        "meanTotalPixelCount" : 129600,
+        "region" : "global_frame",
+        "stdNormalizedLuminance" : 4.818522532444631,
+        "stdRawLuminance" : 0.27978731280282687
+      },
+      {
+        "meanNormalizedLuminance" : 101.33456272635834,
+        "meanRawLuminance" : 132.90061961035533,
+        "meanSkinPixelCount" : 179603,
+        "meanTotalPixelCount" : 249512,
+        "region" : "full_face",
+        "stdNormalizedLuminance" : 6.207423980889084,
+        "stdRawLuminance" : 1.2923096457882584
+      },
+      {
+        "meanNormalizedLuminance" : 84.0794782171623,
+        "meanRawLuminance" : 110.24536469323708,
+        "meanSkinPixelCount" : 7180,
+        "meanTotalPixelCount" : 10704,
+        "region" : "forehead",
+        "stdNormalizedLuminance" : 5.89338594328419,
+        "stdRawLuminance" : 2.0481821603169563
+      },
+      {
+        "meanNormalizedLuminance" : 70.98667226502087,
+        "meanRawLuminance" : 93.06737663948289,
+        "meanSkinPixelCount" : 2307,
+        "meanTotalPixelCount" : 3782,
+        "region" : "left_cheek",
+        "stdNormalizedLuminance" : 5.290116617121481,
+        "stdRawLuminance" : 2.1422885349871814
+      },
+      {
+        "meanNormalizedLuminance" : 87.2683699485404,
+        "meanRawLuminance" : 114.46076748220958,
+        "meanSkinPixelCount" : 41949,
+        "meanTotalPixelCount" : 68091,
+        "region" : "right_cheek",
+        "stdNormalizedLuminance" : 5.109275923143857,
+        "stdRawLuminance" : 0.802265062141746
+      },
+      {
+        "meanNormalizedLuminance" : 78.91914892925627,
+        "meanRawLuminance" : 103.51129150437222,
+        "meanSkinPixelCount" : 4843,
+        "meanTotalPixelCount" : 4903,
+        "region" : "nose",
+        "stdNormalizedLuminance" : 4.5814237828916315,
+        "stdRawLuminance" : 0.6742375141051574
+      }
+    ],
+    "timestamp" : "2026-04-07T22:04:38Z"
+  },
+  {
+    "avgAperture" : 1.899999976158142,
+    "avgFrameLuminance" : 118.67938271604939,
+    "avgISO" : 106.59014129638672,
+    "avgSaturationRatio" : 0,
+    "avgShutterSpeed" : 0.018684,
+    "avgWhiteBalanceTemp" : 5055.8203125,
+    "avgWhiteBalanceTint" : 9.389458656311035,
+    "faceConfidence" : 1,
+    "faceDetected" : true,
+    "frameCount" : 1,
+    "offsetFromVideoStartSeconds" : 6.308559060096741,
+    "roiLuminances" : [
+      {
+        "meanNormalizedLuminance" : 99.32009627332505,
+        "meanRawLuminance" : 118.67938271604939,
+        "meanSkinPixelCount" : 0,
+        "meanTotalPixelCount" : 129600,
+        "region" : "global_frame",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 112.88006187531612,
+        "meanRawLuminance" : 134.88243132029626,
+        "meanSkinPixelCount" : 178619,
+        "meanTotalPixelCount" : 248502,
+        "region" : "full_face",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 97.58590996706788,
+        "meanRawLuminance" : 116.60717207526588,
+        "meanSkinPixelCount" : 7334,
+        "meanTotalPixelCount" : 10896,
+        "region" : "forehead",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 82.45439734005187,
+        "meanRawLuminance" : 98.5262534544019,
+        "meanSkinPixelCount" : 2533,
+        "meanTotalPixelCount" : 4147,
+        "region" : "left_cheek",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 100.16812116729692,
+        "meanRawLuminance" : 119.69270302805815,
+        "meanSkinPixelCount" : 43196,
+        "meanTotalPixelCount" : 68595,
+        "region" : "right_cheek",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 89.94078606908073,
+        "meanRawLuminance" : 107.471875,
+        "meanSkinPixelCount" : 4800,
+        "meanTotalPixelCount" : 4844,
+        "region" : "nose",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      }
+    ],
+    "timestamp" : "2026-04-07T22:04:41Z"
+  },
+  {
+    "avgAperture" : 1.899999976158142,
+    "avgFrameLuminance" : 117.54103395061729,
+    "avgISO" : 106.59014129638672,
+    "avgSaturationRatio" : 0,
+    "avgShutterSpeed" : 0.018684,
+    "avgWhiteBalanceTemp" : 5055.8203125,
+    "avgWhiteBalanceTint" : 9.389458656311035,
+    "faceConfidence" : 1,
+    "faceDetected" : true,
+    "frameCount" : 1,
+    "offsetFromVideoStartSeconds" : 9.306854009628296,
+    "roiLuminances" : [
+      {
+        "meanNormalizedLuminance" : 98.36743788913168,
+        "meanRawLuminance" : 117.54103395061729,
+        "meanSkinPixelCount" : 0,
+        "meanTotalPixelCount" : 129600,
+        "region" : "global_frame",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 110.69656474154628,
+        "meanRawLuminance" : 132.2733310302106,
+        "meanSkinPixelCount" : 167888,
+        "meanTotalPixelCount" : 238144,
+        "region" : "full_face",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 84.72782587908806,
+        "meanRawLuminance" : 101.24281441019639,
+        "meanSkinPixelCount" : 7689,
+        "meanTotalPixelCount" : 11995,
+        "region" : "forehead",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 68.31127619450824,
+        "meanRawLuminance" : 81.62638172439205,
+        "meanSkinPixelCount" : 1357,
+        "meanTotalPixelCount" : 1481,
+        "region" : "left_cheek",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 101.14959179814596,
+        "meanRawLuminance" : 120.86548006909672,
+        "meanSkinPixelCount" : 45733,
+        "meanTotalPixelCount" : 74102,
+        "region" : "right_cheek",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 83.27285746191207,
+        "meanRawLuminance" : 99.50424628450106,
+        "meanSkinPixelCount" : 4710,
+        "meanTotalPixelCount" : 4934,
+        "region" : "nose",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      }
+    ],
+    "timestamp" : "2026-04-07T22:04:44Z"
+  },
+  {
+    "avgAperture" : 1.899999976158142,
+    "avgFrameLuminance" : 118.4433024691358,
+    "avgISO" : 106.59014129638672,
+    "avgSaturationRatio" : 0,
+    "avgShutterSpeed" : 0.018684,
+    "avgWhiteBalanceTemp" : 5055.8203125,
+    "avgWhiteBalanceTint" : 9.389458656311035,
+    "faceConfidence" : 1,
+    "faceDetected" : true,
+    "frameCount" : 1,
+    "offsetFromVideoStartSeconds" : 12.326512098312378,
+    "roiLuminances" : [
+      {
+        "meanNormalizedLuminance" : 99.12252604406468,
+        "meanRawLuminance" : 118.4433024691358,
+        "meanSkinPixelCount" : 0,
+        "meanTotalPixelCount" : 129600,
+        "region" : "global_frame",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 112.94039404929194,
+        "meanRawLuminance" : 134.9545233281983,
+        "meanSkinPixelCount" : 174617,
+        "meanTotalPixelCount" : 241081,
+        "region" : "full_face",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 88.85444901552209,
+        "meanRawLuminance" : 106.17379117028732,
+        "meanSkinPixelCount" : 7135,
+        "meanTotalPixelCount" : 11111,
+        "region" : "forehead",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 81.81580026551674,
+        "meanRawLuminance" : 97.7631822386679,
+        "meanSkinPixelCount" : 2162,
+        "meanTotalPixelCount" : 3587,
+        "region" : "left_cheek",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 98.13222146248931,
+        "meanRawLuminance" : 117.25996958030325,
+        "meanSkinPixelCount" : 42078,
+        "meanTotalPixelCount" : 69199,
+        "region" : "right_cheek",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 87.3943367266551,
+        "meanRawLuminance" : 104.4290765391015,
+        "meanSkinPixelCount" : 4808,
+        "meanTotalPixelCount" : 4924,
+        "region" : "nose",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      }
+    ],
+    "timestamp" : "2026-04-07T22:04:47Z"
+  },
+  {
+    "avgAperture" : 1.899999976158142,
+    "avgFrameLuminance" : 117.90778549382716,
+    "avgISO" : 106.59014129638672,
+    "avgSaturationRatio" : 0,
+    "avgShutterSpeed" : 0.018684,
+    "avgWhiteBalanceTemp" : 5055.8203125,
+    "avgWhiteBalanceTint" : 9.389458656311035,
+    "faceConfidence" : 1,
+    "faceDetected" : true,
+    "frameCount" : 1,
+    "offsetFromVideoStartSeconds" : 15.300204992294312,
+    "roiLuminances" : [
+      {
+        "meanNormalizedLuminance" : 98.67436397642982,
+        "meanRawLuminance" : 117.90778549382716,
+        "meanSkinPixelCount" : 0,
+        "meanTotalPixelCount" : 129600,
+        "region" : "global_frame",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 110.2064492162429,
+        "meanRawLuminance" : 131.68768310813766,
+        "meanSkinPixelCount" : 182952,
+        "meanTotalPixelCount" : 248502,
+        "region" : "full_face",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 85.50440604293516,
+        "meanRawLuminance" : 102.17076411960133,
+        "meanSkinPixelCount" : 7525,
+        "meanTotalPixelCount" : 12024,
+        "region" : "forehead",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 68.39028802515332,
+        "meanRawLuminance" : 81.72079439252336,
+        "meanSkinPixelCount" : 856,
+        "meanTotalPixelCount" : 1017,
+        "region" : "left_cheek",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 98.26615488064341,
+        "meanRawLuminance" : 117.42000904852765,
+        "meanSkinPixelCount" : 50837,
+        "meanTotalPixelCount" : 79065,
+        "region" : "right_cheek",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 83.00569470519302,
+        "meanRawLuminance" : 99.18500866551126,
+        "meanSkinPixelCount" : 4616,
+        "meanTotalPixelCount" : 4776,
+        "region" : "nose",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      }
+    ],
+    "timestamp" : "2026-04-07T22:04:50Z"
+  },
+  {
+    "avgAperture" : 1.899999976158142,
+    "avgFrameLuminance" : 118.2549074074074,
+    "avgISO" : 106.59014129638672,
+    "avgSaturationRatio" : 0,
+    "avgShutterSpeed" : 0.018684,
+    "avgWhiteBalanceTemp" : 5055.8203125,
+    "avgWhiteBalanceTint" : 9.389458656311035,
+    "faceConfidence" : 1,
+    "faceDetected" : true,
+    "frameCount" : 1,
+    "offsetFromVideoStartSeconds" : 18.459797024726868,
+    "roiLuminances" : [
+      {
+        "meanNormalizedLuminance" : 98.964862469819,
+        "meanRawLuminance" : 118.2549074074074,
+        "meanSkinPixelCount" : 0,
+        "meanTotalPixelCount" : 129600,
+        "region" : "global_frame",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 111.38679604210964,
+        "meanRawLuminance" : 133.09810091823735,
+        "meanSkinPixelCount" : 182088,
+        "meanTotalPixelCount" : 251001,
+        "region" : "full_face",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 92.78781715301562,
+        "meanRawLuminance" : 110.87384403036577,
+        "meanSkinPixelCount" : 7245,
+        "meanTotalPixelCount" : 11683,
+        "region" : "forehead",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 75.80734340611505,
+        "meanRawLuminance" : 90.58356826419654,
+        "meanSkinPixelCount" : 2483,
+        "meanTotalPixelCount" : 3741,
+        "region" : "left_cheek",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 97.55843064881773,
+        "meanRawLuminance" : 116.57433653996384,
+        "meanSkinPixelCount" : 44803,
+        "meanTotalPixelCount" : 70167,
+        "region" : "right_cheek",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 87.85774866083989,
+        "meanRawLuminance" : 104.98281585627807,
+        "meanSkinPixelCount" : 5121,
+        "meanTotalPixelCount" : 5221,
+        "region" : "nose",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      }
+    ],
+    "timestamp" : "2026-04-07T22:04:53Z"
+  },
+  {
+    "avgAperture" : 1.899999976158142,
+    "avgFrameLuminance" : 118.66453703703704,
+    "avgISO" : 106.59014129638672,
+    "avgSaturationRatio" : 0,
+    "avgShutterSpeed" : 0.018684,
+    "avgWhiteBalanceTemp" : 5055.8203125,
+    "avgWhiteBalanceTint" : 9.389458656311035,
+    "faceConfidence" : 1,
+    "faceDetected" : true,
+    "frameCount" : 1,
+    "offsetFromVideoStartSeconds" : 21.57700800895691,
+    "roiLuminances" : [
+      {
+        "meanNormalizedLuminance" : 99.30767225969264,
+        "meanRawLuminance" : 118.66453703703704,
+        "meanSkinPixelCount" : 0,
+        "meanTotalPixelCount" : 129600,
+        "region" : "global_frame",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 110.01551693485385,
+        "meanRawLuminance" : 131.45953466541505,
+        "meanSkinPixelCount" : 178968,
+        "meanTotalPixelCount" : 241081,
+        "region" : "full_face",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 84.37148798736746,
+        "meanRawLuminance" : 100.81701980654077,
+        "meanSkinPixelCount" : 8684,
+        "meanTotalPixelCount" : 12646,
+        "region" : "forehead",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 83.91887461968979,
+        "meanRawLuminance" : 100.27618389215347,
+        "meanSkinPixelCount" : 2893,
+        "meanTotalPixelCount" : 4825,
+        "region" : "left_cheek",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 98.38285887866886,
+        "meanRawLuminance" : 117.55946077044342,
+        "meanSkinPixelCount" : 49478,
+        "meanTotalPixelCount" : 76341,
+        "region" : "right_cheek",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 82.20072587031363,
+        "meanRawLuminance" : 98.22313681868744,
+        "meanSkinPixelCount" : 4495,
+        "meanTotalPixelCount" : 4739,
+        "region" : "nose",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      }
+    ],
+    "timestamp" : "2026-04-07T22:04:56Z"
+  },
+  {
+    "avgAperture" : 1.899999976158142,
+    "avgFrameLuminance" : 118.98725308641976,
+    "avgISO" : 106.59014129638672,
+    "avgSaturationRatio" : 0,
+    "avgShutterSpeed" : 0.018684,
+    "avgWhiteBalanceTemp" : 5055.8203125,
+    "avgWhiteBalanceTint" : 9.389458656311035,
+    "faceConfidence" : 1,
+    "faceDetected" : true,
+    "frameCount" : 1,
+    "offsetFromVideoStartSeconds" : 24.741754055023193,
+    "roiLuminances" : [
+      {
+        "meanNormalizedLuminance" : 99.57774603628386,
+        "meanRawLuminance" : 118.98725308641976,
+        "meanSkinPixelCount" : 0,
+        "meanTotalPixelCount" : 129600,
+        "region" : "global_frame",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 111.33094938549726,
+        "meanRawLuminance" : 133.0313687363104,
+        "meanSkinPixelCount" : 178968,
+        "meanTotalPixelCount" : 243049,
+        "region" : "full_face",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 91.24512434140455,
+        "meanRawLuminance" : 109.03045243619489,
+        "meanSkinPixelCount" : 6896,
+        "meanTotalPixelCount" : 10707,
+        "region" : "forehead",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 78.58951129550728,
+        "meanRawLuminance" : 93.90803108808291,
+        "meanSkinPixelCount" : 2316,
+        "meanTotalPixelCount" : 3752,
+        "region" : "left_cheek",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 96.94070443872597,
+        "meanRawLuminance" : 115.83620429833306,
+        "meanSkinPixelCount" : 43133,
+        "meanTotalPixelCount" : 68199,
+        "region" : "right_cheek",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 88.529616466439,
+        "meanRawLuminance" : 105.78564287142571,
+        "meanSkinPixelCount" : 5001,
+        "meanTotalPixelCount" : 5073,
+        "region" : "nose",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      }
+    ],
+    "timestamp" : "2026-04-07T22:04:59Z"
+  },
+  {
+    "avgAperture" : 1.899999976158142,
+    "avgFrameLuminance" : 118.90768518518519,
+    "avgISO" : 106.59014129638672,
+    "avgSaturationRatio" : 0,
+    "avgShutterSpeed" : 0.018684,
+    "avgWhiteBalanceTemp" : 5055.8203125,
+    "avgWhiteBalanceTint" : 9.389458656311035,
+    "faceConfidence" : 1,
+    "faceDetected" : true,
+    "frameCount" : 1,
+    "offsetFromVideoStartSeconds" : 27.741154074668884,
+    "roiLuminances" : [
+      {
+        "meanNormalizedLuminance" : 99.51115745594223,
+        "meanRawLuminance" : 118.90768518518519,
+        "meanSkinPixelCount" : 0,
+        "meanTotalPixelCount" : 129600,
+        "region" : "global_frame",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 110.14600074182584,
+        "meanRawLuminance" : 131.61545213073103,
+        "meanSkinPixelCount" : 173180,
+        "meanTotalPixelCount" : 231361,
+        "region" : "full_face",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 86.76540668856354,
+        "meanRawLuminance" : 103.67755664038053,
+        "meanSkinPixelCount" : 7989,
+        "meanTotalPixelCount" : 10990,
+        "region" : "forehead",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 83.27735434099519,
+        "meanRawLuminance" : 99.50961968680089,
+        "meanSkinPixelCount" : 2235,
+        "meanTotalPixelCount" : 3784,
+        "region" : "left_cheek",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 100.10194390536408,
+        "meanRawLuminance" : 119.61362661864334,
+        "meanSkinPixelCount" : 46644,
+        "meanTotalPixelCount" : 75830,
+        "region" : "right_cheek",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 82.69192120687214,
+        "meanRawLuminance" : 98.81007502679529,
+        "meanSkinPixelCount" : 4665,
+        "meanTotalPixelCount" : 4849,
+        "region" : "nose",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      }
+    ],
+    "timestamp" : "2026-04-07T22:05:02Z"
+  },
+  {
+    "avgAperture" : 1.899999976158142,
+    "avgFrameLuminance" : 118.70739969135802,
+    "avgISO" : 106.59014129638672,
+    "avgSaturationRatio" : 0,
+    "avgShutterSpeed" : 0.018684,
+    "avgWhiteBalanceTemp" : 5055.8203125,
+    "avgWhiteBalanceTint" : 9.389458656311035,
+    "faceConfidence" : 1,
+    "faceDetected" : true,
+    "frameCount" : 1,
+    "offsetFromVideoStartSeconds" : 30.814330101013184,
+    "roiLuminances" : [
+      {
+        "meanNormalizedLuminance" : 99.34354304749304,
+        "meanRawLuminance" : 118.70739969135802,
+        "meanSkinPixelCount" : 0,
+        "meanTotalPixelCount" : 129600,
+        "region" : "global_frame",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 111.396418364817,
+        "meanRawLuminance" : 133.10959880599674,
+        "meanSkinPixelCount" : 179564,
+        "meanTotalPixelCount" : 247009,
+        "region" : "full_face",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 91.7482226795772,
+        "meanRawLuminance" : 109.63161375661376,
+        "meanSkinPixelCount" : 6048,
+        "meanTotalPixelCount" : 9839,
+        "region" : "forehead",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 83.49746050463108,
+        "meanRawLuminance" : 99.77262853005068,
+        "meanSkinPixelCount" : 2762,
+        "meanTotalPixelCount" : 4685,
+        "region" : "left_cheek",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 100.41694838413807,
+        "meanRawLuminance" : 119.99003117820807,
+        "meanSkinPixelCount" : 48752,
+        "meanTotalPixelCount" : 77692,
+        "region" : "right_cheek",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 84.20952743886474,
+        "meanRawLuminance" : 100.6234902124115,
+        "meanSkinPixelCount" : 4802,
+        "meanTotalPixelCount" : 4930,
+        "region" : "nose",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      }
+    ],
+    "timestamp" : "2026-04-07T22:05:05Z"
+  },
+  {
+    "avgAperture" : 1.899999976158142,
+    "avgFrameLuminance" : 118.9561574074074,
+    "avgISO" : 106.59014129638672,
+    "avgSaturationRatio" : 0,
+    "avgShutterSpeed" : 0.018684,
+    "avgWhiteBalanceTemp" : 5055.8203125,
+    "avgWhiteBalanceTint" : 9.389458656311035,
+    "faceConfidence" : 1,
+    "faceDetected" : true,
+    "frameCount" : 1,
+    "offsetFromVideoStartSeconds" : 34.00937104225159,
+    "roiLuminances" : [
+      {
+        "meanNormalizedLuminance" : 99.55172276448626,
+        "meanRawLuminance" : 118.9561574074074,
+        "meanSkinPixelCount" : 0,
+        "meanTotalPixelCount" : 129600,
+        "region" : "global_frame",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 109.75912175879122,
+        "meanRawLuminance" : 131.15316342366003,
+        "meanSkinPixelCount" : 167540,
+        "meanTotalPixelCount" : 235225,
+        "region" : "full_face",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 83.9644757583825,
+        "meanRawLuminance" : 100.33067351906952,
+        "meanSkinPixelCount" : 7394,
+        "meanTotalPixelCount" : 12118,
+        "region" : "forehead",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 69.91630313459412,
+        "meanRawLuminance" : 83.54425749817118,
+        "meanSkinPixelCount" : 1367,
+        "meanTotalPixelCount" : 1574,
+        "region" : "left_cheek",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 101.54991169278276,
+        "meanRawLuminance" : 121.34382956499032,
+        "meanSkinPixelCount" : 45953,
+        "meanTotalPixelCount" : 74690,
+        "region" : "right_cheek",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 83.88744215072491,
+        "meanRawLuminance" : 100.23862466543133,
+        "meanSkinPixelCount" : 4857,
+        "meanTotalPixelCount" : 4957,
+        "region" : "nose",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      }
+    ],
+    "timestamp" : "2026-04-07T22:05:09Z"
+  },
+  {
+    "avgAperture" : 1.899999976158142,
+    "avgFrameLuminance" : 118.797237654321,
+    "avgISO" : 106.59014129638672,
+    "avgSaturationRatio" : 0,
+    "avgShutterSpeed" : 0.018684,
+    "avgWhiteBalanceTemp" : 5055.8203125,
+    "avgWhiteBalanceTint" : 9.389458656311035,
+    "faceConfidence" : 1,
+    "faceDetected" : true,
+    "frameCount" : 1,
+    "offsetFromVideoStartSeconds" : 37.042500019073486,
+    "roiLuminances" : [
+      {
+        "meanNormalizedLuminance" : 99.41872641065419,
+        "meanRawLuminance" : 118.797237654321,
+        "meanSkinPixelCount" : 0,
+        "meanTotalPixelCount" : 129600,
+        "region" : "global_frame",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 109.83960951596323,
+        "meanRawLuminance" : 131.24933970314214,
+        "meanSkinPixelCount" : 172271,
+        "meanTotalPixelCount" : 237169,
+        "region" : "full_face",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 84.24553228614627,
+        "meanRawLuminance" : 100.66651305683564,
+        "meanSkinPixelCount" : 6510,
+        "meanTotalPixelCount" : 10837,
+        "region" : "forehead",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 69.68105722214874,
+        "meanRawLuminance" : 83.26315789473684,
+        "meanSkinPixelCount" : 988,
+        "meanTotalPixelCount" : 1145,
+        "region" : "left_cheek",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 100.31574163828982,
+        "meanRawLuminance" : 119.86909740372887,
+        "meanSkinPixelCount" : 45912,
+        "meanTotalPixelCount" : 73587,
+        "region" : "right_cheek",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 80.7253524305063,
+        "meanRawLuminance" : 96.46018636171114,
+        "meanSkinPixelCount" : 4722,
+        "meanTotalPixelCount" : 4978,
+        "region" : "nose",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      }
+    ],
+    "timestamp" : "2026-04-07T22:05:12Z"
+  },
+  {
+    "avgAperture" : 1.899999976158142,
+    "avgFrameLuminance" : 119.04682098765431,
+    "avgISO" : 106.59014129638672,
+    "avgSaturationRatio" : 0,
+    "avgShutterSpeed" : 0.018684,
+    "avgWhiteBalanceTemp" : 5055.8203125,
+    "avgWhiteBalanceTint" : 9.389458656311035,
+    "faceConfidence" : 1,
+    "faceDetected" : true,
+    "frameCount" : 1,
+    "offsetFromVideoStartSeconds" : 40.087982058525085,
+    "roiLuminances" : [
+      {
+        "meanNormalizedLuminance" : 99.62759706811448,
+        "meanRawLuminance" : 119.04682098765431,
+        "meanSkinPixelCount" : 0,
+        "meanTotalPixelCount" : 129600,
+        "region" : "global_frame",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 109.26878030968697,
+        "meanRawLuminance" : 130.5672455411437,
+        "meanSkinPixelCount" : 161981,
+        "meanTotalPixelCount" : 223729,
+        "region" : "full_face",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 87.68785924276476,
+        "meanRawLuminance" : 104.77981191222571,
+        "meanSkinPixelCount" : 7975,
+        "meanTotalPixelCount" : 11971,
+        "region" : "forehead",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 68.35829161972447,
+        "meanRawLuminance" : 81.6825613079019,
+        "meanSkinPixelCount" : 734,
+        "meanTotalPixelCount" : 892,
+        "region" : "left_cheek",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 101.43463762468747,
+        "meanRawLuminance" : 121.20608649225841,
+        "meanSkinPixelCount" : 46825,
+        "meanTotalPixelCount" : 74293,
+        "region" : "right_cheek",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 84.00826730469042,
+        "meanRawLuminance" : 100.38300083125519,
+        "meanSkinPixelCount" : 4812,
+        "meanTotalPixelCount" : 5016,
+        "region" : "nose",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      }
+    ],
+    "timestamp" : "2026-04-07T22:05:15Z"
+  },
+  {
+    "avgAperture" : 1.899999976158142,
+    "avgFrameLuminance" : 118.94532407407408,
+    "avgISO" : 106.59014129638672,
+    "avgSaturationRatio" : 0,
+    "avgShutterSpeed" : 0.018684,
+    "avgWhiteBalanceTemp" : 5055.8203125,
+    "avgWhiteBalanceTint" : 9.389458656311035,
+    "faceConfidence" : 1,
+    "faceDetected" : true,
+    "frameCount" : 1,
+    "offsetFromVideoStartSeconds" : 43.05894708633423,
+    "roiLuminances" : [
+      {
+        "meanNormalizedLuminance" : 99.54265659237613,
+        "meanRawLuminance" : 118.94532407407408,
+        "meanSkinPixelCount" : 0,
+        "meanTotalPixelCount" : 129600,
+        "region" : "global_frame",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 108.8599292437607,
+        "meanRawLuminance" : 130.07870199409157,
+        "meanSkinPixelCount" : 173312,
+        "meanTotalPixelCount" : 230400,
+        "region" : "full_face",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 86.76882916762791,
+        "meanRawLuminance" : 103.68164622262982,
+        "meanSkinPixelCount" : 8723,
+        "meanTotalPixelCount" : 12328,
+        "region" : "forehead",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 56.148636574722644,
+        "meanRawLuminance" : 67.09302325581395,
+        "meanSkinPixelCount" : 43,
+        "meanTotalPixelCount" : 707,
+        "region" : "left_cheek",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 96.2422408777005,
+        "meanRawLuminance" : 115.00159753311166,
+        "meanSkinPixelCount" : 53833,
+        "meanTotalPixelCount" : 81116,
+        "region" : "right_cheek",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 81.48394405608171,
+        "meanRawLuminance" : 97.36664124078311,
+        "meanSkinPixelCount" : 3933,
+        "meanTotalPixelCount" : 4213,
+        "region" : "nose",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      }
+    ],
+    "timestamp" : "2026-04-07T22:05:18Z"
+  },
+  {
+    "avgAperture" : 1.899999976158142,
+    "avgFrameLuminance" : 119.08023919753086,
+    "avgISO" : 97.30529022216797,
+    "avgSaturationRatio" : 0,
+    "avgShutterSpeed" : 0.018684,
+    "avgWhiteBalanceTemp" : 5055.8203125,
+    "avgWhiteBalanceTint" : 9.389458656311035,
+    "faceConfidence" : 1,
+    "faceDetected" : true,
+    "frameCount" : 1,
+    "offsetFromVideoStartSeconds" : 46.26332199573517,
+    "roiLuminances" : [
+      {
+        "meanNormalizedLuminance" : 109.16467773667637,
+        "meanRawLuminance" : 119.08023919753086,
+        "meanSkinPixelCount" : 0,
+        "meanTotalPixelCount" : 129600,
+        "region" : "global_frame",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 121.74794031380772,
+        "meanRawLuminance" : 132.80645493541428,
+        "meanSkinPixelCount" : 165052,
+        "meanTotalPixelCount" : 231361,
+        "region" : "full_face",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 102.90701106998787,
+        "meanRawLuminance" : 112.25418099869529,
+        "meanSkinPixelCount" : 8431,
+        "meanTotalPixelCount" : 12406,
+        "region" : "forehead",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 79.32663023293134,
+        "meanRawLuminance" : 86.53196527229676,
+        "meanSkinPixelCount" : 1267,
+        "meanTotalPixelCount" : 1340,
+        "region" : "left_cheek",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 113.53530658138872,
+        "meanRawLuminance" : 123.8478576164429,
+        "meanSkinPixelCount" : 48264,
+        "meanTotalPixelCount" : 75911,
+        "region" : "right_cheek",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 95.38260181799075,
+        "meanRawLuminance" : 104.04632043312613,
+        "meanSkinPixelCount" : 4987,
+        "meanTotalPixelCount" : 5279,
+        "region" : "nose",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      }
+    ],
+    "timestamp" : "2026-04-07T22:05:21Z"
+  },
+  {
+    "avgAperture" : 1.899999976158142,
+    "avgFrameLuminance" : 119.24487654320987,
+    "avgISO" : 97.30529022216797,
+    "avgSaturationRatio" : 0,
+    "avgShutterSpeed" : 0.018684,
+    "avgWhiteBalanceTemp" : 5055.8203125,
+    "avgWhiteBalanceTint" : 9.389458656311035,
+    "faceConfidence" : 1,
+    "faceDetected" : true,
+    "frameCount" : 1,
+    "offsetFromVideoStartSeconds" : 49.34862005710602,
+    "roiLuminances" : [
+      {
+        "meanNormalizedLuminance" : 109.31560607630338,
+        "meanRawLuminance" : 119.24487654320987,
+        "meanSkinPixelCount" : 0,
+        "meanTotalPixelCount" : 129600,
+        "region" : "global_frame",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 119.97173967145194,
+        "meanRawLuminance" : 130.86891981196774,
+        "meanSkinPixelCount" : 160398,
+        "meanTotalPixelCount" : 225625,
+        "region" : "full_face",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 93.70434724092205,
+        "meanRawLuminance" : 102.21562793611024,
+        "meanSkinPixelCount" : 6386,
+        "meanTotalPixelCount" : 10163,
+        "region" : "forehead",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 73.59558785963495,
+        "meanRawLuminance" : 80.28036529680365,
+        "meanSkinPixelCount" : 1095,
+        "meanTotalPixelCount" : 1195,
+        "region" : "left_cheek",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 111.86181134401242,
+        "meanRawLuminance" : 122.02235675577626,
+        "meanSkinPixelCount" : 44103,
+        "meanTotalPixelCount" : 72901,
+        "region" : "right_cheek",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 88.3337289068795,
+        "meanRawLuminance" : 96.35718975705844,
+        "meanSkinPixelCount" : 4569,
+        "meanTotalPixelCount" : 4837,
+        "region" : "nose",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      }
+    ],
+    "timestamp" : "2026-04-07T22:05:24Z"
+  },
+  {
+    "avgAperture" : 1.899999976158142,
+    "avgFrameLuminance" : 119.80814043209877,
+    "avgISO" : 97.30529022216797,
+    "avgSaturationRatio" : 7.71604938271605e-06,
+    "avgShutterSpeed" : 0.018684,
+    "avgWhiteBalanceTemp" : 5055.8203125,
+    "avgWhiteBalanceTint" : 9.389458656311035,
+    "faceConfidence" : 1,
+    "faceDetected" : true,
+    "frameCount" : 1,
+    "offsetFromVideoStartSeconds" : 52.3058260679245,
+    "roiLuminances" : [
+      {
+        "meanNormalizedLuminance" : 109.83196816396485,
+        "meanRawLuminance" : 119.80814043209877,
+        "meanSkinPixelCount" : 0,
+        "meanTotalPixelCount" : 129600,
+        "region" : "global_frame",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 118.11562029359078,
+        "meanRawLuminance" : 128.8442068363289,
+        "meanSkinPixelCount" : 159179,
+        "meanTotalPixelCount" : 214369,
+        "region" : "full_face",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 93.85354579562289,
+        "meanRawLuminance" : 102.37837837837837,
+        "meanSkinPixelCount" : 7511,
+        "meanTotalPixelCount" : 11836,
+        "region" : "forehead",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 74.41079300006115,
+        "meanRawLuminance" : 81.16961651917404,
+        "meanSkinPixelCount" : 678,
+        "meanTotalPixelCount" : 859,
+        "region" : "left_cheek",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 110.52736478211321,
+        "meanRawLuminance" : 120.56670077728668,
+        "meanSkinPixelCount" : 45929,
+        "meanTotalPixelCount" : 73061,
+        "region" : "right_cheek",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 89.01000885867221,
+        "meanRawLuminance" : 97.09489704565802,
+        "meanSkinPixelCount" : 4468,
+        "meanTotalPixelCount" : 4684,
+        "region" : "nose",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      }
+    ],
+    "timestamp" : "2026-04-07T22:05:27Z"
+  },
+  {
+    "avgAperture" : 1.899999976158142,
+    "avgFrameLuminance" : 117.52997685185186,
+    "avgISO" : 97.30529022216797,
+    "avgSaturationRatio" : 0,
+    "avgShutterSpeed" : 0.018684,
+    "avgWhiteBalanceTemp" : 5055.8203125,
+    "avgWhiteBalanceTint" : 9.389458656311035,
+    "faceConfidence" : 1,
+    "faceDetected" : true,
+    "frameCount" : 1,
+    "offsetFromVideoStartSeconds" : 55.18492901325226,
+    "roiLuminances" : [
+      {
+        "meanNormalizedLuminance" : 107.74350248111926,
+        "meanRawLuminance" : 117.52997685185186,
+        "meanSkinPixelCount" : 0,
+        "meanTotalPixelCount" : 129600,
+        "region" : "global_frame",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 120.35172134831258,
+        "meanRawLuminance" : 131.28341569020768,
+        "meanSkinPixelCount" : 163516,
+        "meanTotalPixelCount" : 234256,
+        "region" : "full_face",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 95.44319686274595,
+        "meanRawLuminance" : 104.11241940005607,
+        "meanSkinPixelCount" : 7134,
+        "meanTotalPixelCount" : 11683,
+        "region" : "forehead",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 79.72481329463753,
+        "meanRawLuminance" : 86.96631578947368,
+        "meanSkinPixelCount" : 950,
+        "meanTotalPixelCount" : 1101,
+        "region" : "left_cheek",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 111.76214362151745,
+        "meanRawLuminance" : 121.91363609190363,
+        "meanSkinPixelCount" : 50183,
+        "meanTotalPixelCount" : 81956,
+        "region" : "right_cheek",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 91.46637181604872,
+        "meanRawLuminance" : 99.77437446074202,
+        "meanSkinPixelCount" : 4636,
+        "meanTotalPixelCount" : 4960,
+        "region" : "nose",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      }
+    ],
+    "timestamp" : "2026-04-07T22:05:30Z"
+  },
+  {
+    "avgAperture" : 1.899999976158142,
+    "avgFrameLuminance" : 120.1582561728395,
+    "avgISO" : 97.30529022216797,
+    "avgSaturationRatio" : 0,
+    "avgShutterSpeed" : 0.018684,
+    "avgWhiteBalanceTemp" : 5055.8203125,
+    "avgWhiteBalanceTint" : 9.389458656311035,
+    "faceConfidence" : 1,
+    "faceDetected" : true,
+    "frameCount" : 1,
+    "offsetFromVideoStartSeconds" : 58.33448910713196,
+    "roiLuminances" : [
+      {
+        "meanNormalizedLuminance" : 110.15293050218371,
+        "meanRawLuminance" : 120.1582561728395,
+        "meanSkinPixelCount" : 0,
+        "meanTotalPixelCount" : 129600,
+        "region" : "global_frame",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 119.5927545990591,
+        "meanRawLuminance" : 130.45551106100075,
+        "meanSkinPixelCount" : 128605,
+        "meanTotalPixelCount" : 177241,
+        "region" : "full_face",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 100.78716164912147,
+        "meanRawLuminance" : 109.94178305704216,
+        "meanSkinPixelCount" : 7661,
+        "meanTotalPixelCount" : 11010,
+        "region" : "forehead",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 64.35201106934883,
+        "meanRawLuminance" : 70.19718309859155,
+        "meanSkinPixelCount" : 71,
+        "meanTotalPixelCount" : 517,
+        "region" : "left_cheek",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 111.53030254127512,
+        "meanRawLuminance" : 121.6607366022201,
+        "meanSkinPixelCount" : 40809,
+        "meanTotalPixelCount" : 65063,
+        "region" : "right_cheek",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      },
+      {
+        "meanNormalizedLuminance" : 89.21104186931862,
+        "meanRawLuminance" : 97.31419013102871,
+        "meanSkinPixelCount" : 3587,
+        "meanTotalPixelCount" : 3851,
+        "region" : "nose",
+        "stdNormalizedLuminance" : 0,
+        "stdRawLuminance" : 0
+      }
+    ],
+    "timestamp" : "2026-04-07T22:05:33Z"
+  }
+]
