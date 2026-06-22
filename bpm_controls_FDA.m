@@ -1,58 +1,49 @@
 clear; close all; clc;
 
-IMG_PATH = '/Users/devanshbajwala/Documents/VS Code WS/PyQt/DocBOT/rPPG Controls/Photo on 4-5-26 at 10.31.jpg';
-VID_PATH = '/Users/devanshbajwala/Documents/VS Code WS/PyQt/DocBOT/rPPG Controls/Measurement Data/DocBOT_2026-04-07_15-04-35/recording_2026-04-07T22-04-35Z.mov';
+VID_PATH = '/home/macs/Documents/rPPG-Controls/Measurement Data/DocBOT_2026-04-07_15-04-35/recording_2026-04-07T22-04-35Z.mov';
+CSV_PATH = '/home/macs/Documents/rPPG-Controls/Measurement Data/DocBOT_2026-04-07_15-04-35/vitals.csv';
 
-img = imread(IMG_PATH);
-vid = VideoReader(VID_PATH);
-fs  = vid.FrameRate;
-[H_img, W_img, ~] = size(img);
+csv_data      = readtable(CSV_PATH);
+gt_time       = csv_data.offset_seconds;
+gt_hr         = csv_data.heart_rate;
+valid         = ~isnan(gt_hr);
+gt_time       = gt_time(valid);  gt_hr = gt_hr(valid);
+bpm_gt_mean   = mean(gt_hr);
+bpm_gt_median = median(gt_hr);
+fprintf('GT: mean=%.1f  median=%.1f  range=[%d %d]  n=%d\n', ...
+    bpm_gt_mean, bpm_gt_median, min(gt_hr), max(gt_hr), numel(gt_hr));
 
-% ── Face detection ────────────────────────────────────────────────────────
-vid_tmp     = VideoReader(VID_PATH);
-first_frame = readFrame(vid_tmp);
-clear vid_tmp;
+vid      = VideoReader(VID_PATH);
+fs       = vid.FrameRate;
+H_vid    = vid.Width;   % dimensions swap after 90° CW rotation
+W_vid    = vid.Height;
+detector = vision.CascadeObjectDetector('MinSize', [80 80]);
+bbox     = [];
+R_t=[]; G_t=[]; B_t=[];
+player   = vision.VideoPlayer('Name', 'Face Detection Preview');
 
-try
-    detector  = vision.CascadeObjectDetector();
-    all_boxes = step(detector, first_frame);
-catch
-    all_boxes = [];
-end
-
-if isempty(all_boxes)
-    x1 = floor(W_img*0.25); y1 = floor(H_img*0.05);
-    x2 = floor(W_img*0.75); y2 = floor(H_img*0.75);
-else
-    [~, idx] = max(all_boxes(:,3) .* all_boxes(:,4));
-    bbox = all_boxes(idx,:);
-    x1 = max(bbox(1), 1);
-    y1 = max(bbox(2), 1);
-    x2 = min(bbox(1)+bbox(3)-1, W_img);
-    y2 = min(bbox(2)+bbox(4)-1, H_img);
-end
-
-% ── RGB extraction ────────────────────────────────────────────────────────
-vid2 = VideoReader(VID_PATH);
-R_t = []; G_t = []; B_t = [];
-
-while hasFrame(vid2)
-    frame = readFrame(vid2);
-    fc    = frame(y1:y2, x1:x2, :);
+while hasFrame(vid)
+    frame = rot90(readFrame(vid), 3);   % 90° CW: VideoReader ignores .mov rotation metadata
+    boxes = step(detector, frame);
+    if ~isempty(boxes)
+        [~,i] = max(boxes(:,3) .* boxes(:,4));
+        b    = boxes(i,:);
+        bbox = [max(b(1),1) max(b(2),1) min(b(3),W_vid-b(1)) min(b(4),H_vid-b(2))];
+    end
+    if isempty(bbox); continue; end
+    fc    = imcrop(frame, bbox);
     fcd   = double(fc);
-
+    lum   = mean(fcd(:));  if lum > 0; fcd = fcd/lum*128; end
     Yf  =  0.299*fcd(:,:,1)    + 0.587*fcd(:,:,2)    + 0.114*fcd(:,:,3);
     Cbf = -0.168736*fcd(:,:,1) - 0.331264*fcd(:,:,2) + 0.5*fcd(:,:,3)      + 128;
     Crf =  0.5*fcd(:,:,1)      - 0.418688*fcd(:,:,2) - 0.081312*fcd(:,:,3) + 128;
     Mf  = (Cbf>=77)&(Cbf<=127)&(Crf>=133)&(Crf<=173)&(Yf>40);
-
     if sum(Mf(:)) < 50; continue; end
-
-    pix = reshape(fcd, [], 3);
-    msk = Mf(:);
-    R_t(end+1) = mean(pix(msk,1)); %#ok<SAGROW>
-    G_t(end+1) = mean(pix(msk,2)); %#ok<SAGROW>
-    B_t(end+1) = mean(pix(msk,3)); %#ok<SAGROW>
+    pix = reshape(fcd,[],3);  msk = Mf(:);
+    R_t(end+1) = mean(pix(msk,1));
+    G_t(end+1) = mean(pix(msk,2));
+    B_t(end+1) = mean(pix(msk,3));
+    step(player, insertShape(frame, 'Rectangle', bbox, 'Color', 'green', 'LineWidth', 4));
 end
 
 T      = length(R_t);
@@ -107,8 +98,13 @@ for k = 1:numel(win_lengths_sec)
     f = (0:nfft/2) * fs / nfft;
 
     band = (f >= f_low) & (f <= f_high);
-    [~, pidx] = max(X(band));
-    fb = f(band); fp = fb(pidx);
+    Xb = X(band); fb = f(band);
+    [Xp, pidx] = max(Xb);
+    fp = fb(pidx);
+    if fp < 1.0 && 2*fp <= f_high          % half-frequency artifact check
+        [~, i2] = min(abs(f - 2*fp));
+        if X(i2) > 0.2 * Xp; fp = 2*fp; end
+    end
     bpm_fft(k) = fp * 60;
 
     X_db = 20*log10(X / max(X));
@@ -118,6 +114,7 @@ for k = 1:numel(win_lengths_sec)
     xline(f_low,  'k--', 'LineWidth', 1);
     xline(f_high, 'k--', 'LineWidth', 1);
     xline(fp, 'r--', sprintf('peak %.1f BPM', fp*60), 'LabelVerticalAlignment','bottom');
+    xline(bpm_gt_mean/60, 'g--', sprintf('GT %.1f BPM', bpm_gt_mean), 'LabelVerticalAlignment','top');
     xlim([0.5 3.5]); ylim([-40 2]);
     ylabel('dB (norm)');
     title(sprintf('FFT  window=%ds  |  bin resolution = %.3f Hz = %.1f BPM/bin', ...
@@ -131,21 +128,27 @@ figure('Name','Fig 2 — Welch');
 bpm_welch = zeros(1, numel(win_lengths_sec));
 
 for k = 1:numel(win_lengths_sec)
-    nperseg  = min(round(win_lengths_sec(k) * fs), T);
+    nperseg  = min(round(win_lengths_sec(k) * fs), floor(T/4));  % cap: ensure ≥4 windows for averaging
     noverlap = floor(nperseg / 2);
     [P, f]   = pwelch(S_filt, hann(nperseg), noverlap, nfft, fs);
 
     band = (f >= f_low) & (f <= f_high);
-    [~, pidx] = max(P(band));
-    fb = f(band); fp = fb(pidx);
+    Pb = P(band); fb = f(band);
+    [Pp, pidx] = max(Pb);
+    fp = fb(pidx);
+    if fp < 1.0 && 2*fp <= f_high          % half-frequency artifact check
+        [~, i2] = min(abs(f - 2*fp));
+        if P(i2) > 0.2 * Pp; fp = 2*fp; end
+    end
     bpm_welch(k) = fp * 60;
 
     subplot(numel(win_lengths_sec), 1, k);
     plot(f(band), 10*log10(P(band)), 'r', 'LineWidth', 1.2); hold on;
     xline(fp, 'b--', sprintf('peak %.1f BPM', fp*60), 'LabelVerticalAlignment','bottom');
+    xline(bpm_gt_mean/60, 'g--', sprintf('GT %.1f BPM', bpm_gt_mean), 'LabelVerticalAlignment','top');
     ylabel('PSD (dB/Hz)');
-    title(sprintf('Welch  nperseg=%ds  |  bin resolution = %.3f Hz = %.1f BPM/bin', ...
-        win_lengths_sec(k), fs/nperseg, fs/nperseg*60));
+    title(sprintf('Welch  nperseg=%.1fs (req %ds)  |  bin resolution = %.3f Hz = %.1f BPM/bin', ...
+        nperseg/fs, win_lengths_sec(k), fs/nperseg, fs/nperseg*60));
     grid on;
 end
 xlabel('Frequency (Hz)');
@@ -172,36 +175,46 @@ caxis(p_range);
 [~, peak_row] = max(P_st(band_st, :), [], 1);
 hold on;
 plot(t_st, f_cb(peak_row), 'w--', 'LineWidth', 2.0);
+yline(bpm_gt_mean/60, 'g--', sprintf('GT %.1f BPM', bpm_gt_mean), 'LineWidth', 1.5);
 
 % ── Fig 4 — BPM estimate vs window length (motivation for MUSIC) ──────────
-% Reference: full-signal Welch (most accurate offline estimate)
-[P_ref, f_ref] = pwelch(S_filt, hann(T), floor(T/2), nfft, fs);
+% Reference: capped Welch on full signal (same cap as loop, ensures averaging)
+nperseg_ref = floor(T/4);
+[P_ref, f_ref] = pwelch(S_filt, hann(nperseg_ref), floor(nperseg_ref/2), nfft, fs);
 band_ref = (f_ref >= f_low) & (f_ref <= f_high);
-[~, pidx_ref] = max(P_ref(band_ref));
-fb_ref = f_ref(band_ref);
-bpm_ref = fb_ref(pidx_ref) * 60;
+Pb_ref = P_ref(band_ref); fb_ref = f_ref(band_ref);
+[Pp_ref, pidx_ref] = max(Pb_ref);
+fp_ref = fb_ref(pidx_ref);
+if fp_ref < 1.0 && 2*fp_ref <= f_high     % half-frequency artifact check
+    [~, i2] = min(abs(f_ref - 2*fp_ref));
+    if P_ref(i2) > 0.2 * Pp_ref; fp_ref = 2*fp_ref; end
+end
+bpm_ref = fp_ref * 60;
 
 figure('Name','Fig 4 — BPM vs Window Length');
 plot(win_lengths_sec, bpm_fft,   'b-o', 'LineWidth', 1.5, 'MarkerSize', 8); hold on;
 plot(win_lengths_sec, bpm_welch, 'r-s', 'LineWidth', 1.5, 'MarkerSize', 8);
-yline(bpm_ref,   'k--', sprintf('Reference %.1f BPM (full signal Welch)', bpm_ref), 'LineWidth', 1.5);
-yline(bpm_ref+5, 'k:',  '+5 BPM error threshold');
-yline(bpm_ref-5, 'k:',  '-5 BPM error threshold');
+yline(bpm_gt_mean, 'g-',  sprintf('GT mean %.1f BPM', bpm_gt_mean), 'LineWidth', 2);
+yline(bpm_gt_mean+5, 'g:', '+5 BPM');
+yline(bpm_gt_mean-5, 'g:', '-5 BPM');
+yline(bpm_ref,   'k--', sprintf('Welch full-sig %.1f BPM', bpm_ref), 'LineWidth', 1);
 xlabel('Window Length (s)'); ylabel('Estimated BPM');
 legend('FFT', 'Welch', 'Location', 'best');
 title('BPM Accuracy vs Window Length  —  shorter windows need MUSIC');
 xticks(win_lengths_sec);
-ylim([bpm_ref-20, bpm_ref+20]);
+ylim([bpm_gt_mean-20, bpm_gt_mean+20]);
 grid on;
 
 % ── Console summary ───────────────────────────────────────────────────────
 fprintf('\n%-12s  %-10s  %-10s  %-12s  %-12s\n', ...
-    'Window (s)', 'FFT BPM', 'Welch BPM', 'FFT err', 'Welch err');
+    'Window (s)', 'FFT BPM', 'Welch BPM', 'err vs GT', 'err vs GT');
 fprintf('%s\n', repmat('-', 1, 60));
 for k = 1:numel(win_lengths_sec)
     fprintf('%-12d  %-10.1f  %-10.1f  %-12.1f  %-12.1f\n', ...
         win_lengths_sec(k), bpm_fft(k), bpm_welch(k), ...
-        bpm_fft(k)-bpm_ref, bpm_welch(k)-bpm_ref);
+        bpm_fft(k)-bpm_gt_mean, bpm_welch(k)-bpm_gt_mean);
 end
-fprintf('%-12s  %-10.1f  %-10.1f  %-12s  %-12s  (reference)\n', ...
-    'Full', bpm_ref, bpm_ref, '0.0', '0.0');
+fprintf('%-12s  %-10.1f  %-10.1f  %-12s  %-12s  (ground truth)\n', ...
+    'GT mean', bpm_gt_mean, bpm_gt_mean, '0.0', '0.0');
+fprintf('%-12s  %-10.1f  %-10.1f  %-12.1f  %-12.1f  (full-signal Welch)\n', ...
+    'Welch ref', bpm_ref, bpm_ref, bpm_ref-bpm_gt_mean, bpm_ref-bpm_gt_mean);

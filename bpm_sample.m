@@ -2,10 +2,10 @@
 clear; clc; close all;
 
 %% ── Paths ────────────────────────────────────────────────────────────────
-BASE     = '/home/macs/Documents/rPPG-Controls/Measurement Data/DocBOT_2026-04-07_15-50-04';
-VID_PATH = fullfile(BASE, 'recording_2026-04-07T22-50-04Z.mov');
+BASE     = '/home/macs/Documents/rPPG-Controls/Measurement Data/DocBOT_2026-04-07_15-04-35';
+VID_PATH = fullfile(BASE, 'recording_2026-04-07T22-04-35Z.mov');
 CSV_PATH = fullfile(BASE, 'vitals.csv');
-OUT_PATH = fullfile('/home/macs/Documents/rPPG-Controls', 'bpm_sample_output.csv');
+OUT_PATH = fullfile('/home/macs/Documents/rPPG-Controls', 'bpm_sample_output_35.csv');
 
 %% ── Ground truth ──────────────────────────────────────────────────────────
 csv_data = readtable(CSV_PATH);

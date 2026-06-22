@@ -1,0 +1,158 @@
+clear; close all; clc;
+
+% ── Toolbox paths ─────────────────────────────────────────────────────────
+addpath('/home/macs/Downloads/macs-matlab-toolbox-master/macs-matlab-toolbox-master');
+addpath('/home/macs/Downloads/MUSIC-ESPRIT-Frequency-ID-main/MUSIC-ESPRIT-Frequency-ID-main');
+
+CSV_PATH = '/home/macs/Documents/rPPG-Controls/bpm_sample_output_35.csv';
+
+% ── Load pre-processed signals ─────────────────────────────────────────────
+data   = readtable(CSV_PATH);
+t_axis = data.time_s;
+fs     = 1 / (t_axis(2) - t_axis(1));
+T      = height(data);
+
+S_bw = data.BVP_butterworth;
+S_c1 = data.BVP_cheby1;
+S_c2 = data.BVP_cheby2;
+S_el = data.BVP_elliptic;
+
+gt_bpm  = data.gt_bpm;
+vld_gt  = ~isnan(gt_bpm);
+gt_mean = mean(gt_bpm(vld_gt));
+
+fprintf('Loaded %d frames  fs=%.2f Hz  GT mean=%.1f BPM\n', T, fs, gt_mean);
+
+f_low = 0.7;  f_high = 3.5;
+
+% ═════════════════════════════════════════════════════════════════════════════
+%  SECTION A — Full-signal spectra via specCal / specCale
+% ═════════════════════════════════════════════════════════════════════════════
+
+% specCal: auto-creates semilog + linear amplitude spectrum figures
+fprintf('\n--- specCal (Butterworth BVP, full signal) ---\n');
+specCal(S_bw, fs);
+
+% specCale: amplitude spectra of all 4 filtered BVP signals
+fprintf('--- specCale (all 4 filter variants) ---\n');
+sce = specCale([S_bw, S_c1, S_c2, S_el], fs);
+
+figure('Name', 'specCale — All Filters');
+plot(sce.f(:,1), sce.amp, 'LineWidth', 1.2);
+xline(f_low,  'k--', '0.7 Hz');
+xline(f_high, 'k--', '3.5 Hz');
+xlim([0, f_high + 1]);
+legend('Butterworth', 'Cheby I', 'Cheby II', 'Elliptic', 'Location', 'best');
+xlabel('Frequency (Hz)'); ylabel('Amplitude');
+title('Amplitude Spectra — All Filtered BVP Signals');
+grid on;
+
+% ═════════════════════════════════════════════════════════════════════════════
+%  SECTION B — Sliding-window FFT / Welch / MUSIC / ESPRIT
+% ═════════════════════════════════════════════════════════════════════════════
+
+win_secs = [5, 10, 20];
+sw_step  = round(fs);       % 1-second step
+nfft     = 4096;
+p_order  = 1;               % 1 cardiac fundamental
+% M_sub computed per window below: ~N/4 gives good subspace separation
+omega_cb = linspace(2*pi*f_low/fs, 2*pi*f_high/fs, 2048);  % cardiac band search grid
+
+fprintf('\n%s\n', repmat('=', 1, 60));
+fprintf('  %-8s  %-10s  %-10s  %-10s  %-10s\n', 'Window', 'FFT', 'Welch', 'MUSIC', 'ESPRIT');
+fprintf('%s\n', repmat('=', 1, 60));
+
+for wi = 1:numel(win_secs)
+    win_N = round(win_secs(wi) * fs);
+    if win_N > T; continue; end
+
+    M_sub   = max(round(win_N / 4), p_order + 1);  % adaptive: N/4 gives good subspace separation
+    fprintf('  win=%ds  N=%d  M=%d\n', win_secs(wi), win_N, M_sub);
+    starts  = 1 : sw_step : T - win_N + 1;
+    n_sw    = numel(starts);
+    sw_time    = zeros(1, n_sw);
+    bpm_fft    = zeros(1, n_sw);
+    bpm_welch  = zeros(1, n_sw);
+    bpm_music  = nan(1, n_sw);
+    bpm_esprit = nan(1, n_sw);
+
+    for k = 1:n_sw
+        seg        = S_bw(starts(k) : starts(k) + win_N - 1);
+        sw_time(k) = (starts(k) - 1)/fs + win_N/(2*fs);
+
+        % FFT
+        X  = abs(fft(seg .* hann(win_N), nfft));
+        X  = X(1:nfft/2+1);
+        fv = (0:nfft/2) * fs / nfft;
+        bd = (fv >= f_low) & (fv <= f_high);
+        Xb = X(bd); fb = fv(bd);
+        [Xp, pi_] = max(Xb);
+        fp = fb(pi_);
+        if fp < 1.0 && 2*fp <= f_high
+            [~, i2] = min(abs(fv - 2*fp));
+            if X(i2) > 0.2 * Xp; fp = 2*fp; end
+        end
+        bpm_fft(k) = fp * 60;
+
+        % Welch
+        [P, fw] = pwelch(seg, hann(win_N), floor(win_N/2), nfft, fs);
+        bdw = (fw >= f_low) & (fw <= f_high);
+        Pb = P(bdw); fbw = fw(bdw);
+        [Pp, pi_] = max(Pb);
+        fp = fbw(pi_);
+        if fp < 1.0 && 2*fp <= f_high
+            [~, i2] = min(abs(fw - 2*fp));
+            if P(i2) > 0.2 * Pp; fp = 2*fp; end
+        end
+        bpm_welch(k) = fp * 60;
+
+        % MUSIC
+        try
+            Px = m_music(seg, p_order, M_sub, omega_cb);
+            [~, pi_] = max(Px);
+            bpm_music(k) = omega_cb(pi_) / (2*pi) * fs * 60;
+        catch; end
+
+        % ESPRIT
+        try
+            w_est  = m_esprit(seg, p_order, M_sub);
+            hz_est = w_est * fs / (2*pi);
+            hz_est = hz_est(hz_est >= f_low & hz_est <= f_high);
+            if ~isempty(hz_est)
+                bpm_esprit(k) = hz_est(1) * 60;
+            end
+        catch; end
+    end
+
+    gt_sw = interp1(t_axis(vld_gt), gt_bpm(vld_gt), sw_time, 'linear', 'extrap');
+
+    mae_fft    = mean(abs(bpm_fft    - gt_sw));
+    mae_welch  = mean(abs(bpm_welch  - gt_sw));
+    mae_music  = mean(abs(bpm_music  - gt_sw), 'omitnan');
+    mae_esprit = mean(abs(bpm_esprit - gt_sw), 'omitnan');
+
+    fprintf('  %-8d  %-10.2f  %-10.2f  %-10.2f  %-10.2f\n', ...
+        win_secs(wi), mae_fft, mae_welch, mae_music, mae_esprit);
+
+    figure('Name', sprintf('BPM Track — %ds window', win_secs(wi)));
+    stairs(t_axis(vld_gt), gt_bpm(vld_gt), 'k', 'LineWidth', 2.5); hold on;
+    plot(sw_time, bpm_fft,    'b',   'LineWidth', 1.2);
+    plot(sw_time, bpm_welch,  'r',   'LineWidth', 1.2);
+    plot(sw_time, bpm_music,  'g',   'LineWidth', 1.5);
+    plot(sw_time, bpm_esprit, 'm--', 'LineWidth', 1.5);
+    yline(gt_mean, 'k:', sprintf('GT mean %.1f BPM', gt_mean));
+    xlabel('Time (s)'); ylabel('BPM');
+    legend('Ground Truth', ...
+        sprintf('FFT    MAE=%.1f', mae_fft), ...
+        sprintf('Welch  MAE=%.1f', mae_welch), ...
+        sprintf('MUSIC  MAE=%.1f', mae_music), ...
+        sprintf('ESPRIT MAE=%.1f', mae_esprit), ...
+        'Location', 'best');
+    title(sprintf('Window = %ds  |  FFT bin = %.2f Hz = %.1f BPM/bin', ...
+        win_secs(wi), fs/win_N, fs/win_N*60));
+    ylim([gt_mean - 30, gt_mean + 30]); grid on;
+end
+
+fprintf('%s\n', repmat('=', 1, 60));
+fprintf('  MAE (BPM) vs ground truth — lower is better\n');
+fprintf('%s\n', repmat('=', 1, 60));
