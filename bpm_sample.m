@@ -2,10 +2,10 @@
 clear; clc; close all;
 
 %% ── Paths ────────────────────────────────────────────────────────────────
-BASE     = '/Users/devanshbajwala/Documents/VS Code WS/rPPG/rPPG Controls/Measurement Data/DocBOT_2026-04-07_15-50-04';
+BASE     = '/home/macs/Documents/rPPG-Controls/Measurement Data/DocBOT_2026-04-07_15-50-04';
 VID_PATH = fullfile(BASE, 'recording_2026-04-07T22-50-04Z.mov');
 CSV_PATH = fullfile(BASE, 'vitals.csv');
-OUT_PATH = fullfile('/Users/devanshbajwala/Documents/VS Code WS/rPPG/rPPG Controls', 'bpm_sample_output.csv');
+OUT_PATH = fullfile('/home/macs/Documents/rPPG-Controls', 'bpm_sample_output.csv');
 
 %% ── Ground truth ──────────────────────────────────────────────────────────
 csv_data = readtable(CSV_PATH);
@@ -21,8 +21,9 @@ fprintf('Ground truth: %d samples  mean=%.1f BPM  range=[%d %d]\n', ...
 vid_init    = VideoReader(VID_PATH);
 fs          = vid_init.FrameRate;
 vidDuration = vid_init.Duration;
-first_frame = readFrame(vid_init);
-[H_vid, W_vid, ~] = size(first_frame);
+H_vid       = vid_init.Width;   % dimensions swap after 90° CW rotation
+W_vid       = vid_init.Height;
+first_frame = rot90(readFrame(vid_init), 3);
 clear vid_init;
 
 detector = mtcnn.Detector();
@@ -43,9 +44,10 @@ detected_t = zeros(1, nEst);  % 1 = fresh MTCNN detection, 0 = fallback
 fIdx       = 0;
 nFallback  = 0;
 
-vid = VideoReader(VID_PATH);
+vid    = VideoReader(VID_PATH);
+player = vision.VideoPlayer('Name', 'Face Detection Preview');
 while hasFrame(vid)
-    frame = readFrame(vid);
+    frame = rot90(readFrame(vid), 3);
 
     % MTCNN detection on this frame — updates bounding box and landmarks
     [bboxes_f, ~, mtcnnLand_f] = detector.detect(frame);
@@ -82,6 +84,7 @@ while hasFrame(vid)
     B_t(fIdx)        = mean(pix(msk,3));
     lum_t(fIdx)      = frame_lum;
     detected_t(fIdx) = det_flag;
+    step(player, insertShape(frame, 'Rectangle', faceBox_cur, 'Color', 'green', 'LineWidth', 4));
 end
 
 R_t        = R_t(1:fIdx);

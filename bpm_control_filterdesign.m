@@ -13,32 +13,25 @@ bpm_gt_median = median(gt_hr);
 fprintf('GT: mean=%.1f  median=%.1f  range=[%d %d]  n=%d\n', ...
     bpm_gt_mean, bpm_gt_median, min(gt_hr), max(gt_hr), numel(gt_hr));
 
-vid_tmp     = VideoReader(VID_PATH);
-first_frame = readFrame(vid_tmp);
-[H_vid, W_vid, ~] = size(first_frame);  clear vid_tmp;
-
-try
-    detector  = vision.CascadeObjectDetector();
-    all_boxes = step(detector, first_frame);
-catch;  all_boxes = []; end
-
-if isempty(all_boxes)
-    x1=floor(W_vid*0.25); y1=floor(H_vid*0.05);
-    x2=floor(W_vid*0.75); y2=floor(H_vid*0.75);
-else
-    [~,idx] = max(all_boxes(:,3).*all_boxes(:,4));
-    bbox = all_boxes(idx,:);
-    x1=max(bbox(1),1);               y1=max(bbox(2),1);
-    x2=min(bbox(1)+bbox(3)-1,W_vid); y2=min(bbox(2)+bbox(4)-1,H_vid);
-end
-
-vid = VideoReader(VID_PATH);
-fs  = vid.FrameRate;
+vid      = VideoReader(VID_PATH);
+fs       = vid.FrameRate;
+H_vid    = vid.Width;   % dimensions swap after 90° CW rotation
+W_vid    = vid.Height;
+detector = vision.CascadeObjectDetector('MinSize', [80 80]);
+bbox     = [];
 R_t=[]; G_t=[]; B_t=[];
+player   = vision.VideoPlayer('Name', 'Face Detection Preview');
 
 while hasFrame(vid)
-    frame = readFrame(vid);
-    fc    = frame(y1:y2, x1:x2, :);
+    frame = rot90(readFrame(vid), 3);
+    boxes = step(detector, frame);
+    if ~isempty(boxes)
+        [~,i] = max(boxes(:,3) .* boxes(:,4));
+        b    = boxes(i,:);
+        bbox = [max(b(1),1) max(b(2),1) min(b(3),W_vid-b(1)) min(b(4),H_vid-b(2))];
+    end
+    if isempty(bbox); continue; end
+    fc    = imcrop(frame, bbox);
     fcd   = double(fc);
     lum   = mean(fcd(:));  if lum > 0; fcd = fcd/lum*128; end
     Yf  =  0.299*fcd(:,:,1)    + 0.587*fcd(:,:,2)    + 0.114*fcd(:,:,3);
@@ -50,6 +43,7 @@ while hasFrame(vid)
     R_t(end+1) = mean(pix(msk,1)); %#ok<SAGROW>
     G_t(end+1) = mean(pix(msk,2)); %#ok<SAGROW>
     B_t(end+1) = mean(pix(msk,3)); %#ok<SAGROW>
+    step(player, insertShape(frame, 'Rectangle', bbox, 'Color', 'green', 'LineWidth', 4));
 end
 
 T      = length(R_t);
