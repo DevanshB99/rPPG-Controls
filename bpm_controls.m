@@ -111,7 +111,6 @@ subplot(1,2,1); imshow(img);          title('Input Image');
 subplot(1,2,2); imshow(skin_ycbcr);   title(sprintf('YCbCr Skin Mask  [%d px, %.1f%%]', n_skin_img, pct_skin));
 sgtitle('Section 4.4: Skin Detection — 77≤Cb≤127, 133≤Cr≤173, Y>40  (Eq. 25)');
 
-
 %semantic Segmentation: Face ROI(Eqs. 26–36)
 %BiSeNet not available in MATLAB without deep learning setup.
 %using Viola-Jones face detector to obtain face bounding box,then applying YCbCr mask within ROI-M_final(Eq. 34).

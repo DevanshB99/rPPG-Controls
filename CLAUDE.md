@@ -4,6 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
+<<<<<<< HEAD
 This is a **MATLAB research implementation** of a Remote Photoplethysmography (rPPG) pipeline — non-contact heart rate extraction from face video recordings. Developed at the MACS Lab (University of Washington) as part of the DocBOT project. All algorithms are derived from and keyed to equations in `rPPG_Mathematical_Foundation.pdf` / `.tex`.
 
 ## Running the Code
@@ -69,3 +70,63 @@ Measurement data lives in `Measurement Data/` — JSON outputs from the DocBOT s
 ## Mathematical Reference
 
 All equation numbers in comments (`% Eq. XX`) refer to `rPPG_Mathematical_Foundation.pdf` in the project root. The `.tex` source is also present. When modifying signal processing logic, cross-reference the relevant equations to maintain traceability.
+=======
+This is a MATLAB research project implementing **Remote Photoplethysmography (rPPG)** — contactless heart rate measurement from RGB video. The project compares multiple frequency estimation methods (FFT, Welch PSD, MUSIC, ESPRIT) for extracting heart rate (BPM) from facial video.
+
+This is a collaboration between Devansh Bajwala and Prof. Xu Chen, who is upgrading the system with advanced subspace-based frequency estimation methods (MUSIC/ESPRIT) from controls/precision engineering theory.
+
+## Running the Code
+
+All scripts are standalone MATLAB `.m` files — open MATLAB and run them directly. No build system or dependencies to install.
+
+- **Main pipeline:** `bpm_controls.m` (or the live script `bpm_controls.mlx`)
+- **ESPRIT variants:** `bpm_control_ESPRIT.m`
+- **Filter design comparison:** `bpm_control_filterdesign.m`
+- **FDA (FFT/Welch/STFT) comparison:** `bpm_controls_FDA.m`
+- **MUSIC algorithm:** `bpm_estimate_MUSIC.m`
+
+**Required MATLAB Toolboxes:** Signal Processing, Image Processing, Computer Vision (Vision)
+
+**Data paths** in scripts are hardcoded — update paths to point at videos/images in `Measurement Data/` before running.
+
+## Signal Processing Pipeline
+
+The core 7-stage pipeline (implemented in `bpm_controls.m`):
+
+1. **Face detection & ROI** — Viola-Jones detector; falls back to manual bounding box
+2. **RGB extraction** — Per-frame spatial mean over skin pixels → R(t), G(t), B(t)
+3. **Skin detection** — YCbCr thresholds: Cb∈[77,127], Cr∈[133,173], Y>40
+4. **CHROM projection** — `Xs = 3R̂ - 2Ĝ`, `Ys = 1.5R̂ + Ĝ - 1.5B̂`, `S = Xs - α·Ys` (α = std(Xs)/std(Ys))
+5. **Detrending** — Linear drift removal via least squares
+6. **Bandpass filter** — 4th-order Butterworth, 0.67–3.5 Hz, zero-phase (`filtfilt`)
+7. **Frequency estimation** — Peak of PSD in cardiac band → BPM
+
+## Frequency Estimation Methods
+
+| Method | File | Notes |
+|--------|------|-------|
+| Welch PSD | `bpm_controls.m` | Production baseline; Hann window, 50% overlap |
+| FFT / STFT | `bpm_controls_FDA.m` | Multiple window length comparisons |
+| MUSIC | `bpm_estimate_MUSIC.m` | Subspace method; higher resolution with fewer samples |
+| ESPRIT (3 variants) | `bpm_control_ESPRIT.m` | K=1 analytic (Hilbert), K=2 LS, K=2 TLS |
+
+**Core research question (Prof. Chen):** MUSIC/ESPRIT can extract frequency accurately from much shorter windows (2–3 sec vs 10 sec for Welch), potentially reducing measurement latency significantly.
+
+## Research Roadmap (Prof. Chen's 4 Parts)
+
+1. **Filter Design** — Compare FIR vs IIR, Butterworth vs Chebyshev II; target 0.7–3.5 Hz
+2. **Frequency Domain Analysis** — Minimize window length while maintaining accuracy (FFT/Welch/STFT)
+3. **MUSIC/ESPRIT** — High-resolution subspace frequency estimation; quantify minimum data requirements
+4. **Confidence Scoring** — SNR + temporal stability + skin pixel count; integrate with DocBot control loop
+
+## Key Reference Files
+
+- `rPPG_Mathematical_Foundation.tex/.pdf` — Full mathematical derivation of entire signal chain (image sensor physics through spectral estimation, ~700 equations)
+- `Technical Documents/rPPG_MUSIC_Analysis_and_Roadmap.md` — Prof. Chen's roadmap and MUSIC/ESPRIT explanation
+- `Technical Documents/` — Per-trial analysis results for each method variant
+- `Measurement Data/DocBOT_2026-04-07_*/` — Video recordings + ground truth vitals (CSV/JSON)
+
+## Harmonic Correction
+
+All frequency estimators include a **half-frequency artifact check**: if the detected peak is below ~1.0 Hz, check whether 2× that frequency has a strong peak (indicating the true BPM was detected at its first harmonic). This prevents systematic 2× underestimation errors.
+>>>>>>> 8f086f4 (WIP)
