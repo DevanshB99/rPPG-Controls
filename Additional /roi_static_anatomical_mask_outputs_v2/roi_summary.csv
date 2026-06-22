@@ -1,0 +1,6 @@
+roi,totalPixels,adaptiveSkinPixels,usablePixels,contaminatedPixels,eyePixels,browPixels,mouthPixels,hairlinePixels,earPixels,beardPixels,specularPixels
+forehead,18542,13174,13174,0,0,0,0,22,0,0,0
+left_cheek,10416,5640,5545,95,0,0,0,0,0,0,0
+right_cheek,10416,5428,5199,229,0,0,0,0,0,0,0
+nose,7644,2446,30,2416,0,0,0,0,0,0,0
+full_face,238144,77953,19213,58740,0,3,0,22,0,351,0
