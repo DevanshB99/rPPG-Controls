@@ -35,14 +35,15 @@ pts_last     = squeeze(mtcnnLand(best,:,:));
 fprintf('First detection: faceBox=[%d %d %d %d]\n', faceBox_last);
 
 %% ── Step 2: Per-frame MTCNN tracking + skin detection + channel extraction
-nEst       = ceil(vidDuration * fs) + 20;
-R_t        = zeros(1, nEst);
-G_t        = zeros(1, nEst);
-B_t        = zeros(1, nEst);
-lum_t      = zeros(1, nEst);
-detected_t = zeros(1, nEst);  % 1 = fresh MTCNN detection, 0 = fallback
-fIdx       = 0;
-nFallback  = 0;
+nEst           = ceil(vidDuration * fs) + 20;
+R_t            = zeros(1, nEst);
+G_t            = zeros(1, nEst);
+B_t            = zeros(1, nEst);
+lum_t          = zeros(1, nEst);
+detected_t     = zeros(1, nEst);   % 1 = fresh MTCNN detection, 0 = fallback bbox reuse
+skin_count_t   = zeros(1, nEst);   % number of skin pixels per frame
+fIdx           = 0;
+nFallback      = 0;
 
 vid    = VideoReader(VID_PATH);
 player = vision.VideoPlayer('Name', 'Face Detection Preview');
@@ -68,30 +69,35 @@ while hasFrame(vid)
 
     faceROI  = imcrop(frame, faceBox_cur);
     skinMask = buildSkinMask(faceROI, pts_cur, faceBox_cur);
+    n_skin   = nnz(skinMask);
 
-    if nnz(skinMask) < 50, continue; end
+    if n_skin < 50, continue; end
 
-    % Luminance normalisation before channel extraction (removes AGC drift)
-    fcd       = double(faceROI);
-    frame_lum = mean(fcd(:));
-    if frame_lum > 0, fcd = fcd / frame_lum * 128; end
+    % Per-frame luminance normalisation using skin pixels only.
+    % Skin-only mean removes AGC/auto-exposure drift without bias from hair/background.
+    msk     = skinMask(:);
+    fcd_raw = double(faceROI);
+    pix_raw = reshape(fcd_raw, [], 3);
+    frame_lum = mean(pix_raw(msk, :), 'all');
+    fcd       = fcd_raw / max(frame_lum, 1) * 128;
 
-    msk  = skinMask(:);
     pix  = reshape(fcd, [], 3);
     fIdx = fIdx + 1;
-    R_t(fIdx)        = mean(pix(msk,1));
-    G_t(fIdx)        = mean(pix(msk,2));
-    B_t(fIdx)        = mean(pix(msk,3));
-    lum_t(fIdx)      = frame_lum;
-    detected_t(fIdx) = det_flag;
+    R_t(fIdx)          = mean(pix(msk,1));
+    G_t(fIdx)          = mean(pix(msk,2));
+    B_t(fIdx)          = mean(pix(msk,3));
+    lum_t(fIdx)        = frame_lum;
+    detected_t(fIdx)   = det_flag;
+    skin_count_t(fIdx) = n_skin;
     step(player, insertShape(frame, 'Rectangle', faceBox_cur, 'Color', 'green', 'LineWidth', 4));
 end
 
-R_t        = R_t(1:fIdx);
-G_t        = G_t(1:fIdx);
-B_t        = B_t(1:fIdx);
-lum_t      = lum_t(1:fIdx);
-detected_t = detected_t(1:fIdx);
+R_t          = R_t(1:fIdx);
+G_t          = G_t(1:fIdx);
+B_t          = B_t(1:fIdx);
+lum_t        = lum_t(1:fIdx);
+detected_t   = detected_t(1:fIdx);
+skin_count_t = skin_count_t(1:fIdx);
 T          = fIdx;
 t_axis     = (0:T-1) / fs;
 fprintf('Extracted %d frames (%.1fs) at %.2fHz  |  MTCNN fresh: %d  fallback: %d\n', ...
@@ -112,7 +118,7 @@ S_det  = S(:) - (coeffs(1)*t_vec + coeffs(2));
 
 %% ── Step 4: Four IIR bandpass filters ─────────────────────────────────────
 f_low = 0.7;  f_high = 3.5;
-order = 2;    Rp = 0.5;  Rs = 40;
+order = 4;    Rp = 0.5;  Rs = 40;
 Wn = [f_low f_high] / (fs/2);
 
 [b_bw, a_bw] = butter(order,         Wn, 'bandpass');
@@ -129,10 +135,10 @@ S_el = filtfilt(b_el, a_el, S_det);
 gt_bpm_frame = interp1(gt_time, gt_hr, t_axis', 'linear', NaN);
 
 out = table( ...
-    (1:T)', t_axis', G_t', G_n', lum_t', detected_t', S_det, S_bw, S_c1, S_c2, S_el, gt_bpm_frame, ...
+    (1:T)', t_axis', G_t', G_n', lum_t', detected_t', skin_count_t', S_det, S_bw, S_c1, S_c2, S_el, gt_bpm_frame, ...
     'VariableNames', {'frame_index','time_s','G_skin_raw','G_normalized', ...
-        'frame_luminance','face_detected','BVP_detrended','BVP_butterworth','BVP_cheby1', ...
-        'BVP_cheby2','BVP_elliptic','gt_bpm'});
+        'frame_luminance','face_detected','skin_pixel_count', ...
+        'BVP_detrended','BVP_butterworth','BVP_cheby1','BVP_cheby2','BVP_elliptic','gt_bpm'});
 
 writetable(out, OUT_PATH);
 fprintf('Saved: %s  (%d rows x %d cols)\n', OUT_PATH, height(out), width(out));

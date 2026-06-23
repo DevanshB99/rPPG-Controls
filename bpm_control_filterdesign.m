@@ -43,7 +43,7 @@ while hasFrame(vid)
     R_t(end+1) = mean(pix(msk,1)); %#ok<SAGROW>
     G_t(end+1) = mean(pix(msk,2)); %#ok<SAGROW>
     B_t(end+1) = mean(pix(msk,3)); %#ok<SAGROW>
-    step(player, insertShape(frame, 'Rectangle', bbox, 'Color', 'green', 'LineWidth', 4));
+    % step(player, insertShape(frame, 'Rectangle', bbox, 'Color', 'green', 'LineWidth', 4));
 end
 
 T      = length(R_t);
