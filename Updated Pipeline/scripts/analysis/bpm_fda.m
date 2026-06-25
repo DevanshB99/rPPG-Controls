@@ -80,7 +80,7 @@ cv_ev = std(ev_ns) / (mean(ev_ns) + 1e-9);
 fprintf('\n── Section W: Noise Whiteness ──────────────────────────────────────\n');
 fprintf('  Cardiac fundamental : %.2f Hz (%.0f BPM)\n', f_card, f_card*60);
 fprintf('  Ljung-Box (%d lags) : Q=%.1f  p=%.4f  → %s\n', LB_LAGS, Q_lb, p_lb, ...
-    iif_str(is_colored, 'COLORED NOISE → AR pre-whitening applied', 'white noise → no pre-whitening needed'));
+    iif_str(is_colored, 'COLORED NOISE', 'white noise'));
 fprintf('  Eigenvalue CV       : %.3f (M=%d)  → %s\n', cv_ev, M_ev, ...
     iif_str(cv_ev > 0.30, 'non-uniform — colored noise confirmed', 'near-uniform — approximately white'));
 fprintf('────────────────────────────────────────────────────────────────────\n\n');
@@ -139,7 +139,6 @@ title('Amplitude Spectra — tight (1.0 Hz) vs adaptive passband lower edge');  
 % ── Section B: Sliding-window FFT / Welch / MUSIC / ESPRIT ──────────────────
 win_secs      = [2, 3, 5, 10, 20];
 nfft          = 4096;
-P_AR          = 8;      % AR pre-whitening order (Burg method)
 ACC_THR       = 10;     % ±BPM tolerance counted as "accurate"
 SNR_THR       = 6;      % dB: cardiac peak vs in-band noise floor
 DET_THR       = 0.7;    % fraction of frames with fresh MTCNN detection
@@ -171,10 +170,8 @@ for wi = 1:numel(win_secs)
     bpm_welch_ha = zeros(1, n_sw);   % Welch on Ham-adapt
     bpm_welch_et = zeros(1, n_sw);   % Welch on El-tight
     bpm_welch_ea = zeros(1, n_sw);   % Welch on El-adapt
-    bpm_music    = nan(1, n_sw);     % MUSIC        on Ham-tight
-    bpm_esprit   = nan(1, n_sw);     % ESPRIT       on Ham-tight
-    bpm_music_ar = nan(1, n_sw);     % MUSIC+AR-white  on Ham-tight
-    bpm_esprit_ar= nan(1, n_sw);     % ESPRIT+AR-white on Ham-tight
+    bpm_music    = nan(1, n_sw);     % MUSIC  on Ham-tight
+    bpm_esprit   = nan(1, n_sw);     % ESPRIT on Ham-tight
     snr_db       = zeros(1, n_sw);
     det_rate    = zeros(1, n_sw);
     skin_mean   = zeros(1, n_sw);
@@ -188,12 +185,9 @@ for wi = 1:numel(win_secs)
         bpm_welch_ha(k) = est_welch(S_ham_adapt(idx), win_N, nfft, fs, f_low_adapt, f_high);
         bpm_welch_et(k) = est_welch(S_el_tight(idx),  win_N, nfft, fs, f_low,       f_high);
         bpm_welch_ea(k) = est_welch(S_el_adapt(idx),  win_N, nfft, fs, f_low_adapt, f_high);
-        p_mdl             = mdl_order_local(seg, M_sub, 6);
-        seg_w             = ar_prewhiten(seg, fs, f_low, f_high, P_AR);
-        bpm_music(k)      = est_music(seg,   p_mdl,        M_sub, omega_cb, fs, f_low, f_high);
-        bpm_esprit(k)     = est_esprit(seg,  max(4,p_mdl), M_sub, fs, f_low, f_high);
-        bpm_music_ar(k)   = est_music(seg_w, p_mdl,        M_sub, omega_cb, fs, f_low, f_high);
-        bpm_esprit_ar(k)  = est_esprit(seg_w,max(4,p_mdl), M_sub, fs, f_low, f_high);
+        p_mdl        = mdl_order_local(seg, M_sub, 6);
+        bpm_music(k) = est_music(seg,  p_mdl,        M_sub, omega_cb, fs, f_low, f_high);
+        bpm_esprit(k)= est_esprit(seg, max(4,p_mdl), M_sub, fs, f_low, f_high);
         [snr_db(k), det_rate(k), skin_mean(k), lum_cv_win(k)] = ...
             win_quality(seg, detected_t(idx), skin_count_t(idx), lum_t(idx), ...
                         win_N, nfft, fs, f_low, f_high);
@@ -223,16 +217,12 @@ for wi = 1:numel(win_secs)
     mae_wch_ea  = mean(abs(bpm_welch_ea - gt_sw));
     mae_music    = mean(abs(bpm_music    - gt_sw), 'omitnan');
     mae_esprit   = mean(abs(bpm_esprit  - gt_sw), 'omitnan');
-    mae_music_ar = mean(abs(bpm_music_ar  - gt_sw), 'omitnan');
-    mae_esprit_ar= mean(abs(bpm_esprit_ar - gt_sw), 'omitnan');
-    acc_welch    = mean(abs(bpm_welch    - gt_sw) <= ACC_THR) * 100;
-    acc_wch_ha   = mean(abs(bpm_welch_ha - gt_sw) <= ACC_THR) * 100;
-    acc_wch_et   = mean(abs(bpm_welch_et - gt_sw) <= ACC_THR) * 100;
-    acc_wch_ea   = mean(abs(bpm_welch_ea - gt_sw) <= ACC_THR) * 100;
-    acc_music    = mean(abs(bpm_music    - gt_sw) <= ACC_THR, 'omitnan') * 100;
-    acc_esprit   = mean(abs(bpm_esprit   - gt_sw) <= ACC_THR, 'omitnan') * 100;
-    acc_music_ar = mean(abs(bpm_music_ar  - gt_sw) <= ACC_THR, 'omitnan') * 100;
-    acc_esprit_ar= mean(abs(bpm_esprit_ar - gt_sw) <= ACC_THR, 'omitnan') * 100;
+    acc_welch  = mean(abs(bpm_welch    - gt_sw) <= ACC_THR) * 100;
+    acc_wch_ha = mean(abs(bpm_welch_ha - gt_sw) <= ACC_THR) * 100;
+    acc_wch_et = mean(abs(bpm_welch_et - gt_sw) <= ACC_THR) * 100;
+    acc_wch_ea = mean(abs(bpm_welch_ea - gt_sw) <= ACC_THR) * 100;
+    acc_music  = mean(abs(bpm_music    - gt_sw) <= ACC_THR, 'omitnan') * 100;
+    acc_esprit = mean(abs(bpm_esprit   - gt_sw) <= ACC_THR, 'omitnan') * 100;
 
     fprintf('  win=%ds  N=%d  M=%d  HQ=%d/%d (%.0f%%)  |  LQ: SNR=%d  Det=%d  Skin=%d  Lum=%d\n', ...
         win_secs(wi), win_N, M_sub, sum(hq_win), n_sw, mean(hq_win)*100, ...
@@ -241,9 +231,6 @@ for wi = 1:numel(win_secs)
         win_secs(wi), mae_welch, mae_wch_ha, mae_wch_et, mae_wch_ea, mae_music, mae_esprit);
     fprintf('  %-5s  %-11.1f  %-11.1f  %-11.1f  %-11.1f  %-10.1f  %-10.1f   [Acc %%]\n', ...
         '', acc_welch, acc_wch_ha, acc_wch_et, acc_wch_ea, acc_music, acc_esprit);
-    fprintf('  %-5s  AR-white:  MUSIC=%.2f(%.0f%%)  ESPRIT=%.2f(%.0f%%)  [MAE / Acc]\n', ...
-        '', mae_music_ar, acc_music_ar, mae_esprit_ar, acc_esprit_ar);
-
     if sum(hq_win) >= 5
         mae_hq_w   = mean(abs(bpm_welch(hq_win)     - gt_sw(hq_win)));
         mae_hq_ha  = mean(abs(bpm_welch_ha(hq_win)  - gt_sw(hq_win)));
@@ -251,11 +238,8 @@ for wi = 1:numel(win_secs)
         mae_hq_ea  = mean(abs(bpm_welch_ea(hq_win)  - gt_sw(hq_win)));
         mae_hq_m   = mean(abs(bpm_music(hq_win)     - gt_sw(hq_win)), 'omitnan');
         mae_hq_e   = mean(abs(bpm_esprit(hq_win)    - gt_sw(hq_win)), 'omitnan');
-        mae_hq_mar = mean(abs(bpm_music_ar(hq_win)  - gt_sw(hq_win)), 'omitnan');
-        mae_hq_ear = mean(abs(bpm_esprit_ar(hq_win) - gt_sw(hq_win)), 'omitnan');
         fprintf('    HQ: HT=%.1f  HA=%.1f  ET=%.1f  EA=%.1f  MUS=%.1f  ESP=%.1f  [MAE BPM]\n', ...
             mae_hq_w, mae_hq_ha, mae_hq_et, mae_hq_ea, mae_hq_m, mae_hq_e);
-        fprintf('    HQ-AR: MUS=%.1f  ESP=%.1f  [MAE BPM]\n', mae_hq_mar, mae_hq_ear);
     end
 
     figure('Name', sprintf('BPM Track — %ds window', win_secs(wi)));
@@ -266,15 +250,13 @@ for wi = 1:numel(win_secs)
     plot(sw_time, bpm_welch_ha, 'b--',  'LineWidth', 1.2);   % Ham-adapt Welch
     plot(sw_time, bpm_welch_et, 'r',    'LineWidth', 2.0);   % El-tight Welch
     plot(sw_time, bpm_welch_ea, 'r--',  'LineWidth', 1.2);   % El-adapt Welch
-    plot(sw_time, bpm_music,     'g',    'LineWidth', 1.8);   % MUSIC on Ham-tight
-    plot(sw_time, bpm_esprit,    'm--',  'LineWidth', 1.5);   % ESPRIT on Ham-tight
-    plot(sw_time, bpm_music_ar,  'g--',  'LineWidth', 1.5);   % MUSIC+AR-white
-    plot(sw_time, bpm_esprit_ar, 'm',    'LineWidth', 1.5);   % ESPRIT+AR-white
+    plot(sw_time, bpm_music,  'g',   'LineWidth', 1.8);   % MUSIC on Ham-tight
+    plot(sw_time, bpm_esprit, 'm--', 'LineWidth', 1.5);   % ESPRIT on Ham-tight
     yline(gt_mean,           'k:', sprintf('GT %.1f BPM', gt_mean));
     yline(gt_mean + ACC_THR, 'g:');  yline(gt_mean - ACC_THR, 'g:');
     scatter(sw_time(~hq_win), 52*ones(1,sum(~hq_win)), 20, [0.8 0.2 0.2], 'v', 'filled');
     ylabel('BPM');  ylim([50, 145]);  grid on;
-    legend('GT','HT-Welch','HA-Welch','ET-Welch','EA-Welch','MUSIC','ESPRIT','MUSIC-AR','ESP-AR','Low-conf▼', ...
+    legend('GT','HT-Welch','HA-Welch','ET-Welch','EA-Welch','MUSIC','ESPRIT','Low-conf▼', ...
            'Location','best');
     title(sprintf('Win=%ds | solid=tight(1.0Hz) dashed=adapt(%.2fHz) | MUSIC/ESPRIT on HamTight', ...
         win_secs(wi), f_low_adapt));
@@ -453,23 +435,6 @@ function k_opt = mdl_order_local(x, M, max_k)
     end
 end
 
-function seg_w = ar_prewhiten(seg, fs, f_low, f_high, p_ar)
-    x = seg(:);
-    N = length(x);
-    if N < p_ar + 10;  seg_w = x;  return;  end
-    nfft_w    = max(512, 2^nextpow2(4*N));
-    [P, F]    = pwelch(x, hann(N), 0, nfft_w, fs);
-    band      = F >= f_low & F <= f_high;
-    [~, pi_c] = max(P(band));
-    Fb        = F(band);
-    f_c       = Fb(pi_c);
-    if f_c < 1.1 && 2*f_c <= f_high;  f_c = 2*f_c;  end
-    f_n       = min(max(f_c / (fs/2), 0.01), 0.99);
-    [b_n, a_n, ~] = designNotchPeakIIR('CenterFrequency', f_n, 'Bandwidth', f_n/8);
-    x_noise   = filtfilt(b_n, a_n, x);
-    [a_ar, ~] = arburg(x_noise, p_ar);
-    seg_w     = filter([1, a_ar], 1, x);
-end
 
 % ── Auto-save figures and close diary ────────────────────────────────────────
 fig_handles = findall(0, 'Type', 'figure');
