@@ -3,41 +3,58 @@ clear; close all; clc;
 addpath('/home/macs/Downloads/macs-matlab-toolbox-master/macs-matlab-toolbox-master');
 addpath('/home/macs/Downloads/MUSIC-ESPRIT-Frequency-ID-main/MUSIC-ESPRIT-Frequency-ID-main');
 
-CSV_PATH = '/home/macs/Documents/rPPG-Controls/bpm_sample_output_35.csv';
+% ── Load latest filterdesign output from data/ ───────────────────────────
+% Run bpm_control_filterdesign.m first — it exports filtered signals and
+% the adaptive passband parameters into data/filterdesign_<timestamp>.csv.
+data_dir  = fullfile(fileparts(mfilename('fullpath')), 'data');
+csv_files = dir(fullfile(data_dir, 'filterdesign_*.csv'));
+if isempty(csv_files)
+    error('No filterdesign CSV found in data/. Run bpm_control_filterdesign.m first.');
+end
+[~, newest] = max([csv_files.datenum]);
+csv_path    = fullfile(data_dir, csv_files(newest).name);
+fprintf('Loading: %s\n', csv_path);
 
-data           = readtable(CSV_PATH);
+data           = readtable(csv_path);
 t_axis         = data.time_s;
-fs             = 1 / (t_axis(2) - t_axis(1));
+fs             = 1 / median(diff(t_axis));
 T              = height(data);
-S_bw           = data.BVP_butterworth;
-S_c1           = data.BVP_cheby1;
-S_c2           = data.BVP_cheby2;
-S_el           = data.BVP_elliptic;
+
+% Primary signal: Hamming N_mid tight passband (fp1=1.0 Hz) — best performer
+S_primary      = data.BVP_ham_tight;   % winner from filter design
+S_ham_adapt    = data.BVP_ham_adapt;   % Hamming N_mid, adaptive fp1
+S_el_tight     = data.BVP_el_tight;   % Elliptic tight, for comparison
+
 lum_t          = data.frame_luminance;
 detected_t     = data.face_detected;
 skin_count_t   = data.skin_pixel_count;
 
 gt_bpm  = data.gt_bpm;
-vld_gt  = ~isnan(gt_bpm);   % NaN = frames outside vitals monitor window; BVP is still valid there
+vld_gt  = ~isnan(gt_bpm);
 gt_mean = mean(gt_bpm(vld_gt));
+
+% Passband: tight lower edge (1.0 Hz = 60 BPM) removes motion/respiration;
+% upper edge from filterdesign's adaptive estimate stored in the CSV.
+f_low  = 1.0;                   % tight fp1 matching BVP_ham_tight filter
+f_high = data.f_p2_adapt(1);    % adaptive upper cutoff from filterdesign
 
 fprintf('Loaded %d frames  fs=%.2f Hz  GT coverage=%.0f%%  GT mean=%.1f BPM\n', ...
     T, fs, 100*mean(vld_gt), gt_mean);
-
-f_low  = 0.7;
-f_high = 3.5;
+fprintf('Cardiac band: [%.2f, %.2f] Hz = [%.0f, %.0f] BPM\n', ...
+    f_low, f_high, f_low*60, f_high*60);
 
 % ── Section A: Full-signal spectra ──────────────────────────────────────────
-specCal(S_bw, fs);
+specCal(S_primary, fs);
 
-sce = specCale([S_bw, S_c1, S_c2, S_el], fs);
-figure('Name', 'specCale — All Filters');
+sce = specCale([S_primary, S_ham_adapt, S_el_tight], fs);
+figure('Name', 'specCale — Filterdesign Winners');
 plot(sce.f(:,1), sce.amp, 'LineWidth', 1.2);
-xline(f_low, 'k--', '0.7 Hz');  xline(f_high, 'k--', '3.5 Hz');
+xline(f_low,  'k--', sprintf('%.1f Hz (tight)', f_low));
+xline(f_high, 'k--', sprintf('%.1f Hz', f_high));
 xlim([0, f_high + 1]);
-legend('Butterworth','Cheby I','Cheby II','Elliptic','Location','best');
+legend('Hamming tight (PRIMARY)','Hamming adapt','Elliptic tight','Location','best');
 xlabel('Frequency (Hz)');  ylabel('Amplitude');
-title('Amplitude Spectra — All Filtered BVP Signals');  grid on;
+title('Amplitude Spectra — Filter Design Winners (from filterdesign CSV)');  grid on;
 
 % ── Section B: Sliding-window FFT / Welch / MUSIC / ESPRIT ──────────────────
 win_secs      = [2, 3, 5, 10, 20];
@@ -78,7 +95,7 @@ for wi = 1:numel(win_secs)
 
     for k = 1:n_sw
         idx           = starts(k) : starts(k) + win_N - 1;
-        seg           = S_bw(idx);
+        seg           = S_primary(idx);
         sw_time(k)    = (starts(k) - 1)/fs + win_N/(2*fs);
         bpm_fft(k)    = est_fft(seg, win_N, nfft, fs, f_low, f_high);
         bpm_welch(k)  = est_welch(seg, win_N, nfft, fs, f_low, f_high);

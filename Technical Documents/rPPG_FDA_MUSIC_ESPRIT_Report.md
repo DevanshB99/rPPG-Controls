@@ -921,6 +921,114 @@ The **number of data products** available for estimating `R̂` is approximately 
 
 The transition from "moderate" to "good" stability between 3 s and 5 s matches exactly the observed crossover in ESPRIT performance, confirming that sample support is the limiting factor for short windows.
 
+
+# 16. Real Time BiseNET and ONXX Support (Future TODO's)
+
+This is a good question to think through carefully before committing to a rewrite. Let me break it down by where the time actually goes.
+
+  Where the compute actually lives
+
+  ┌──────────────────────────────────┬──────────────────────┬──────────────────────┬────────────────────────────────────────────┐
+  │            Component             │ Per-frame cost (CPU) │ Per-frame cost (GPU) │                   Notes                    │
+  ├──────────────────────────────────┼──────────────────────┼──────────────────────┼────────────────────────────────────────────┤
+  │ BiSeNet inference                │ ~200–350ms           │ ~5–15ms              │ Run every 10 frames → ~35ms average on CPU │
+  ├──────────────────────────────────┼──────────────────────┼──────────────────────┼────────────────────────────────────────────┤
+  │ MediaPipe FaceLandmarker         │ ~5–10ms              │ ~3ms                 │ Already C++ internally                     │
+  ├──────────────────────────────────┼──────────────────────┼──────────────────────┼────────────────────────────────────────────┤
+  │ Texture maps (LBP/SVC/coherence) │ ~4–8ms               │ —                    │ numpy/OpenCV, mostly C under the hood      │
+  ├──────────────────────────────────┼──────────────────────┼──────────────────────┼────────────────────────────────────────────┤
+  │ Adaptive color skin (3 methods)  │ ~2–5ms               │ —                    │ numpy                                      │
+  ├──────────────────────────────────┼──────────────────────┼──────────────────────┼────────────────────────────────────────────┤
+  │ GMM predict (cached)             │ ~1–2ms               │ —                    │ trivial                                    │
+  ├──────────────────────────────────┼──────────────────────┼──────────────────────┼────────────────────────────────────────────┤
+  │ CHROM + filter                   │ <1ms                 │ —                    │ trivial                                    │
+  ├──────────────────────────────────┼──────────────────────┼──────────────────────┼────────────────────────────────────────────┤
+  │ cv2.imshow render                │ ~5–10ms              │ —                    │ drop in production                         │
+  └──────────────────────────────────┴──────────────────────┴──────────────────────┴────────────────────────────────────────────┘
+
+  BiSeNet is the bottleneck by a factor of ~10×. Everything else is already fast enough.
+
+  Will C++ help?
+
+  Partially, but it targets the wrong bottleneck.
+
+  - MediaPipe is already C++. You're calling the same native code from Python — no gain.
+  - numpy/OpenCV operations already run in C extensions that release the GIL. Per-frame pixel ops are not Python-slow, they're memory-bandwidth-limited.
+  - BiSeNet inference — this is where C++ would matter, but not raw C++. The gain comes from TensorRT or ONNX Runtime with CUDA. That's achievable without a full C++
+  rewrite.
+
+  Where C++ genuinely wins: eliminating Python GIL overhead for true thread parallelism, and reducing memory copies between pipeline stages. But that's a 1.5–2× gain on the
+  non-inference parts, not 10×.
+
+  What actually gets you to real-time
+
+  1. GPU-accelerate BiSeNet (the only thing that matters)
+
+  Export to ONNX and run with ONNX Runtime + CUDA:
+  import onnxruntime as ort
+  sess = ort.InferenceSession("bisenet.onnx", providers=['CUDAExecutionProvider'])
+  This drops BiSeNet from ~250ms → ~5ms per call. Combined with your every-10-frames caching, the average cost drops to ~0.5ms/frame. The pipeline becomes fully real-time at
+  30fps without touching C++.
+
+  2. Decouple skin extraction from BPM estimation
+
+  The key architectural insight: rPPG fundamentally cannot give you instantaneous heart rate. A single frame tells you nothing — you need a window. MUSIC/ESPRIT need ~2–3s,
+  Welch needs ~10s. So the pipeline should be:
+
+  Thread 1 (30fps, <10ms/frame):
+    Camera frame → MediaPipe landmarks → cached mask → R,G,B mean → rolling buffer
+
+  Thread 2 (every 10 frames, ~15ms):
+    Run BiSeNet on latest frame → update GMM + polygon masks
+
+  Thread 3 (every 1 second):
+    Last 5s from rolling buffer → CHROM → S_det → best filter → MUSIC/ESPRIT → BPM
+
+  Python threads work fine here because BiSeNet (PyTorch/CUDA) and OpenCV both release the GIL during compute. ThreadPoolExecutor is already in the pipeline — extend the
+  same pattern.
+
+  3. Use MUSIC/ESPRIT instead of Welch for the BPM step
+
+  This is Prof. Chen's core contribution. Welch needs 10s of signal to resolve 0.1 Hz. MUSIC/ESPRIT can resolve the same from 2–3s with the same or better accuracy. This
+  halves the latency floor for getting a valid BPM estimate after pipeline startup.
+
+  What "near-zero latency" actually means in rPPG
+
+  ┌────────────────────────────────────────┬───────────────────────────────────────────────────────────────────────────┐
+  │                 Stage                  │                            Achievable latency                             │
+  ├────────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────┤
+  │ Frame capture → R,G,B mean extracted   │ <5ms (GPU pipeline)                                                       │
+  ├────────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────┤
+  │ First valid BPM estimate after startup │ ~2–3s minimum (MUSIC), ~10s (Welch) — this is physics, not implementation │
+  ├────────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────┤
+  │ BPM update rate once running           │ Every 0.5–1s with MUSIC/ESPRIT on a sliding window                        │
+  ├────────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────┤
+  │ Frame loss                             │ Zero — extraction is per-frame, estimation is decoupled                   │
+  └────────────────────────────────────────┴───────────────────────────────────────────────────────────────────────────┘
+
+  The 2–3s startup delay is irreducible. You cannot estimate a 1Hz signal from less than ~1 cycle, and hair and noise make 2–3 cycles the practical minimum. No
+  implementation language changes this.
+
+  Realistic recommendation for your path
+
+  Now (validation phase):
+    Python pipeline as-is → bpm_control_filterdesign.m → pick best filter
+    → bpm_FDA_MUSIC.m → validate MUSIC/ESPRIT accuracy
+
+  Next (real-time prototype):
+    1. Export BiSeNet to ONNX → drop-in replacement, 20× faster, still Python
+    2. Move BPM estimation to a background thread with rolling buffer
+    3. Target: 30fps skin extraction, 1Hz BPM updates, 2–3s latency
+
+  Later (production/deployment):
+    If you need to run on embedded hardware (Jetson, phone) or as a ROS node:
+    - Port just the per-frame extraction to C++ with OpenCV C++ API
+    - Use TensorRT on-device for BiSeNet
+    - Keep filter design and BPM estimation in MATLAB or Python (runs once per window, not per frame)
+
+  A full C++ rewrite is not the right move now — it's months of work for gains you can get from ONNX Runtime in an afternoon. Reserve it for when you have a validated
+  algorithm that needs to ship on constrained hardware.
+
 ---
 
 *Report prepared by Devansh Bajwala, MACS Lab, University of Washington.*  

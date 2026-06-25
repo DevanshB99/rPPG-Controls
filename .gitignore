@@ -1,0 +1,8 @@
+rppg/bin
+rppg/include
+rppg/lib
+rppg/share
+rppg/lib64
+rppg/share
+rppg/__pycache__
+rppg/pyvenv.cfg
