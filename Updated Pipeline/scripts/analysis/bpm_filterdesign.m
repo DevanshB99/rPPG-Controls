@@ -7,7 +7,15 @@ clear; close all; clc;
 %                              simpler Viola-Jones + fixed-YCbCr MATLAB pipeline
 USE_PYTHON_CSV = true;
 
-PYTHON_CSV = '/home/macs/Documents/rPPG-Controls/rppg/bpm_bisenet_output.csv';
+pipeline_dir = fileparts(fileparts(fileparts(mfilename('fullpath'))));
+input_dir    = fullfile(pipeline_dir, 'results', 'input_results');
+run_dirs     = dir(input_dir);
+run_dirs     = run_dirs([run_dirs.isdir] & ~ismember({run_dirs.name}, {'.','..'}));
+if isempty(run_dirs)
+    error('No input_results found. Run rppg_pipeline_refined.py first.');
+end
+[~, latest_idx] = max([run_dirs.datenum]);
+PYTHON_CSV = fullfile(input_dir, run_dirs(latest_idx).name, 'rppg_output.csv');
 VID_PATH   = '/home/macs/Documents/rPPG-Controls/Measurement Data/DocBOT_2026-04-07_15-04-35/recording_2026-04-07T22-04-35Z.mov';
 CSV_PATH   = '/home/macs/Documents/rPPG-Controls/Measurement Data/DocBOT_2026-04-07_15-04-35/vitals.csv';
 
@@ -723,8 +731,8 @@ fprintf('fp1=1.0Hz removes that band — compare wMAE and CCC above vs standard.
 
 % ── Export MATLAB-filtered signals to data/ for FDA_MUSIC ────────────────
 if USE_PYTHON_CSV
-    data_dir = fullfile(fileparts(mfilename('fullpath')), 'data');
-    if ~exist(data_dir, 'dir');  mkdir(data_dir);  end
+    filter_dir = fullfile(pipeline_dir, 'results', 'filter_results');
+    if ~exist(filter_dir, 'dir');  mkdir(filter_dir);  end
 
     out_tbl               = py_data;
     out_tbl.BVP_ham_tight = S_ham_t;    % PRIMARY — best performer (fp1=1.0 Hz)
@@ -735,7 +743,7 @@ if USE_PYTHON_CSV
     out_tbl.f_p2_adapt    = repmat(f_p2,  T, 1);   % upper cutoff used
     out_tbl.N_ham_mid     = repmat(N_mid, T, 1);   % FIR order
 
-    out_csv = fullfile(data_dir, sprintf('filterdesign_%s.csv', datestr(now,'yyyymmdd_HHMMSS')));
+    out_csv = fullfile(filter_dir, sprintf('filterdesign_%s.csv', datestr(now,'yyyymmdd_HHMMSS')));
     writetable(out_tbl, out_csv);
     fprintf('\nExported → %s\n', out_csv);
     fprintf('  PRIMARY: BVP_ham_tight (Hamming N=%d, fp1=1.0Hz)\n', N_mid);

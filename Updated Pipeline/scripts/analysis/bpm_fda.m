@@ -3,16 +3,22 @@ clear; close all; clc;
 addpath('/home/macs/Downloads/macs-matlab-toolbox-master/macs-matlab-toolbox-master');
 addpath('/home/macs/Downloads/MUSIC-ESPRIT-Frequency-ID-main/MUSIC-ESPRIT-Frequency-ID-main');
 
-% ── Load latest filter design output from data/ ───────────────────────────
-% Run bpm_control_filterdesign.m first — it exports filtered signals and
-% the adaptive passband parameters into data/filter design_<timestamp>.csv.
-data_dir  = fullfile(fileparts(mfilename('fullpath')), 'data');
-csv_files = dir(fullfile(data_dir, 'filterdesign_*.csv'));
+% ── Auto-save setup: results/fda_results/fda_<timestamp>/ ────────────────
+pipeline_dir = fileparts(fileparts(fileparts(mfilename('fullpath'))));
+fda_ts   = datestr(now, 'yyyymmdd_HHMMSS');
+fda_dir  = fullfile(pipeline_dir, 'results', 'fda_results', sprintf('fda_%s', fda_ts));
+mkdir(fda_dir);
+diary(fullfile(fda_dir, 'output.txt'));
+diary on;
+
+% ── Load latest filterdesign output from results/filter_results/ ─────────
+filter_dir = fullfile(pipeline_dir, 'results', 'filter_results');
+csv_files  = dir(fullfile(filter_dir, 'filterdesign_*.csv'));
 if isempty(csv_files)
-    error('No filterdesign CSV found in data/. Run bpm_control_filterdesign.m first.');
+    error('No filterdesign CSV found in filter_results/. Run bpm_filterdesign.m first.');
 end
 [~, newest] = max([csv_files.datenum]);
-csv_path    = fullfile(data_dir, csv_files(newest).name);
+csv_path    = fullfile(filter_dir, csv_files(newest).name);
 fprintf('Loading: %s\n', csv_path);
 
 data           = readtable(csv_path);
@@ -36,7 +42,7 @@ vld_gt  = ~isnan(gt_bpm);
 gt_mean = mean(gt_bpm(vld_gt));
 
 % Passband: tight lower edge (1.0 Hz = 60 BPM) removes motion/respiration;
-% upper edge from filter design's adaptive estimate stored in the CSV.
+% upper edge from filterdesign's adaptive estimate stored in the CSV.
 f_low  = 1.0;                   % tight fp1 matching BVP_ham_tight filter
 f_high = data.f_p2_adapt(1);    % adaptive upper cutoff from filterdesign
 
@@ -46,10 +52,6 @@ fprintf('Cardiac band: [%.2f, %.2f] Hz = [%.0f, %.0f] BPM\n', ...
     f_low, f_high, f_low*60, f_high*60);
 
 % ── Section W: Noise whiteness diagnostic ────────────────────────────────────
-% Notch-filters the cardiac fundamental to expose the noise floor, then tests
-% whether that noise is white (flat PSD, zero ACF) or colored.
-% White noise → no pre-whitening needed.
-% Colored noise → AR pre-whitening is needed before MUSIC.
 [P_w, F_w] = pwelch(S_primary, hann(min(round(fs*10), T)), [], 4096, fs);
 band_w = F_w >= f_low & F_w <= f_high;
 [~, pi_w] = max(P_w(band_w));  F_bw = F_w(band_w);
@@ -468,3 +470,15 @@ function seg_w = ar_prewhiten(seg, fs, f_low, f_high, p_ar)
     [a_ar, ~] = arburg(x_noise, p_ar);
     seg_w     = filter([1, a_ar], 1, x);
 end
+
+% ── Auto-save figures and close diary ────────────────────────────────────────
+fig_handles = findall(0, 'Type', 'figure');
+for fh = fig_handles'
+    fname = get(fh, 'Name');
+    if isempty(fname);  fname = sprintf('figure_%d', get(fh,'Number'));  end
+    fname = regexprep(fname, '[^\w -]', '_');
+    saveas(fh, fullfile(fda_dir, [fname '.png']));
+    saveas(fh, fullfile(fda_dir, [fname '.pdf']));
+end
+fprintf('\nFigures saved → %s\n', fda_dir);
+diary off;
