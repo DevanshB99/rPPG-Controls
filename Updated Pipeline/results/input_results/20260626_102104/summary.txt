@@ -1,0 +1,12 @@
+rPPG pipeline run : 20260626_102104
+Video             : /home/macs/Documents/rPPG-Controls/Measurement Data/DocBOT_2026-04-07_15-04-35/recording_2026-04-07T22-04-35Z.mov
+Frames            : 1836 valid  |  fps: 30.00  |  PCA component: 0
+
+Pipeline quality summary across 1836 frames:
+  quality_score  mean=0.672  std=0.016  p10=0.651  p90=0.689
+  bisenet_conf   mean=0.950
+  vote_mean      mean=0.794  (1.0 = all 3 colour methods agree)
+  clust_agree    mean=0.283  (GMM consensus)
+  roi_coverage   mean=0.883  (skin fraction of face ROI)
+  green_cv       mean=0.354  (< 0.10 = spatially uniform)
+  hair_rej_frac  mean=0.072  (fraction removed as hair)

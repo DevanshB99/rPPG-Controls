@@ -1,0 +1,40 @@
+Loading: /home/macs/Documents/rPPG-Controls/Updated Pipeline/results/filter_results/filterdesign_20260626_104904.csv
+Loaded 1836 frames  fs=30.00 Hz  GT coverage=96%  GT mean=103.1 BPM
+Cardiac band: [1.00, 3.00] Hz = [60, 180] BPM
+
+── Section W: Noise Whiteness ──────────────────────────────────────
+  Cardiac fundamental : 1.73 Hz (104 BPM)
+  Ljung-Box (20 lags) : Q=7709.0  p=0.0000  → COLORED NOISE
+  Eigenvalue CV       : 3.233 (M=60)  → non-uniform — colored noise confirmed
+────────────────────────────────────────────────────────────────────
+
+
+==============================================================================================================
+  Win(s)  HamTight     HamAdapt     ElTight      ElAdapt      MUSIC       ESPRIT    
+         (Welch/MAE)  (Welch/MAE)  (Welch/MAE)  (Welch/MAE)  (HamT/MAE)  (HamT/MAE)
+==============================================================================================================
+  win=2s  N=60  M=15  HQ=45/60 (75%)  |  LQ: SNR=15  Det=0  Skin=0  Lum=0
+  2      16.00        13.46        22.10        16.61        17.20       17.45        [MAE BPM]
+         51.7         53.3         31.7         41.7         18.3        41.7         [Acc %]
+    HQ: HT=10.5  HA=10.8  ET=16.7  EA=13.8  MUS=15.4  ESP=13.0  [MAE BPM]
+  win=3s  N=90  M=23  HQ=46/59 (78%)  |  LQ: SNR=13  Det=0  Skin=0  Lum=0
+  3      10.81        12.35        19.16        13.83        8.80        22.80        [MAE BPM]
+         62.7         52.5         39.0         57.6         69.5        52.5         [Acc %]
+    HQ: HT=8.6  HA=9.9  ET=15.3  EA=10.5  MUS=7.0  ESP=20.1  [MAE BPM]
+  win=5s  N=150  M=38  HQ=51/57 (89%)  |  LQ: SNR=5  Det=0  Skin=0  Lum=0
+  5      8.21         10.18        16.70        11.41        7.46        36.96        [MAE BPM]
+         68.4         63.2         47.4         61.4         77.2        8.8          [Acc %]
+    HQ: HT=7.2  HA=8.6  ET=15.3  EA=9.7  MUS=7.1  ESP=36.4  [MAE BPM]
+  win=10s  N=300  M=75  HQ=52/52 (100%)  |  LQ: SNR=0  Det=0  Skin=0  Lum=0
+  10     5.39         5.79         15.60        10.26        5.69        13.06        [MAE BPM]
+         82.7         82.7         40.4         75.0         86.5        61.5         [Acc %]
+    HQ: HT=5.4  HA=5.8  ET=15.6  EA=10.3  MUS=5.7  ESP=13.1  [MAE BPM]
+  win=20s  N=600  M=150  HQ=42/42 (100%)  |  LQ: SNR=0  Det=0  Skin=0  Lum=0
+  20     2.28         3.15         14.22        7.93         2.10        3.71         [MAE BPM]
+         100.0        97.6         57.1         83.3         100.0       88.1         [Acc %]
+    HQ: HT=2.3  HA=3.1  ET=14.2  EA=7.9  MUS=2.1  ESP=3.7  [MAE BPM]
+====================================================================================================
+  MAE (BPM) and Acc (% within ±10 BPM) vs ground truth
+====================================================================================================
+
+Figures saved → /home/macs/Documents/rPPG-Controls/Updated Pipeline/results/fda_results/fda_20260626_122638

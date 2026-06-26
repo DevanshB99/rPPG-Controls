@@ -366,6 +366,7 @@ if __name__ == '__main__':
     BISENET_EVERY = 10
     MAX_CROP_PX   = 384
     DISPLAY_EVERY = 3     # refresh preview every N frames (display doesn't need 30 fps)
+    EMA_ALPHA     = 0.03  # prob-map EMA smoothing (~1.0 s time constant at 30 fps)
 
     # Persistent caches — all invalidated together on BiSeNet frames
     sk_cache      = None   # bool (H,W)
@@ -374,6 +375,7 @@ if __name__ == '__main__':
     gmm_sk_cache  = None   # bool (H,W) — GMM skin mask, cached until next BiSeNet frame
     mask_cache    = None   # (fm,lcm,rcm,excl) — invalidated when landmarks move
     pts_cache     = None   # landmark array from mask_cache frame, for movement check
+    sk_prob_smooth = None  # EMA-smoothed prob map — eliminates inter-BiSeNet drift
 
     cv2.namedWindow("rPPG — Original | Skin ROI", cv2.WINDOW_NORMAL)
 
@@ -446,6 +448,12 @@ if __name__ == '__main__':
 
             gmm_sk = gmm_sk_cache if gmm_sk_cache is not None else np.zeros((H,W), bool)
 
+            # EMA update — smooths the discrete jump in weights each time BiSeNet reruns
+            if sk_prob_smooth is None:
+                sk_prob_smooth = sk_prob_full.copy()
+            else:
+                sk_prob_smooth += EMA_ALPHA * (sk_prob_full - sk_prob_smooth)
+
             # ── Seed for adaptive colour methods ──────────────────────────────
             face_seed = sk_full & roi_union
 
@@ -488,8 +496,8 @@ if __name__ == '__main__':
                 f   = rgb.astype(np.float32)
                 lum = float(f[final].mean())
                 fn  = f / max(lum, 1.0) * 128.0
-                # BiSeNet probability-weighted face-wide means
-                w_all = sk_prob_full[final].clip(0.01)
+                # EMA-smoothed probability-weighted face-wide means
+                w_all = sk_prob_smooth[final].clip(0.01)
                 R_t.append(float(np.average(fn[:,:,0][final], weights=w_all)))
                 G_t.append(float(np.average(fn[:,:,1][final], weights=w_all)))
                 B_t.append(float(np.average(fn[:,:,2][final], weights=w_all)))
@@ -498,7 +506,7 @@ if __name__ == '__main__':
                                          (l_skin,    Rl_t, Gl_t, Bl_t),
                                          (r_skin,    Rr_t, Gr_t, Br_t)]:
                     if int(reg.sum()) >= 20:
-                        wr = sk_prob_full[reg].clip(0.01)
+                        wr = sk_prob_smooth[reg].clip(0.01)
                         Rl.append(float(np.average(fn[:,:,0][reg], weights=wr)))
                         Gl.append(float(np.average(fn[:,:,1][reg], weights=wr)))
                         Bl.append(float(np.average(fn[:,:,2][reg], weights=wr)))
